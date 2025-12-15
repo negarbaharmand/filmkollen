@@ -1,88 +1,41 @@
-// 1. Använda lokalt state
+import type { Movie } from "../../types/movie";
+
+// En enkel vy som visar en hårdkodad film med information om filmen.
+// Använder typescript för att definiera filmens egenskaper.
+// Använd Store klassen för att hantera state.
+
+
+const demoMovie: Movie = {
+  id: 566555,
+  title: "Cats",
+  overview:
+    "En grupp katter samlas för den årliga Jellicle-balen där en av dem ska väljas för ett nytt liv.",
+  posterPath: "/u5QrKhSCGoFsB8aAvZZJ1bBioYy.jpg",
+  releaseDate: "2019-12-19",
+  voteAverage: 4.4,
+};
+
+
 export default function about() {
-    let count = 1;
-  
-    const about = document.createElement("div");
-    about.classList.add("about");
-    about.innerHTML = `
-      <h2>how many boats?</h2>
-      <h2 id="boatHeading">⛵️</h2>
-      <div class="buttons">
-        <button id="incrementButton">Add boats</button>
-        <button id="decrementButton">Remove boats</button>
+  const about = document.createElement("div");
+  about.classList.add("about");
+
+  about.innerHTML = `
+    <section class="about-movie">
+      <h2>Om filmen</h2>
+      <div class="about-movie__card">
+        <div class="about-movie__poster">
+          <img src="https://www.themoviedb.org/t/p/w1280/aCNch5FmzT2WaUcY44925owIZXY.jpg" alt="${demoMovie.title}" />
+        </div>
+        <div class="about-movie__content">
+          <h3>${demoMovie.title} (${new Date(demoMovie.releaseDate).getFullYear()})</h3>
+          <p><strong>Betyg (TMDB):</strong> ${demoMovie.voteAverage}</p>
+          <p>${demoMovie.overview}</p>
+        </div>
       </div>
-    `;
-    const boatHeading = about.querySelector<HTMLHeadingElement>("#boatHeading")!;
-    const incrementButton = about.querySelector<HTMLButtonElement>("#incrementButton")!;
-    const decrementButton = about.querySelector<HTMLButtonElement>("#decrementButton")!;
-  
-    if (count === 0) {
-      decrementButton.disabled = true;
-    }
-  
-    const updateBoats = () =>
-      (boatHeading.innerHTML =
-        Array.from({ length: count }, (_) => "⛵️").join("") || "no boats");
-  
-    incrementButton.addEventListener("click", () => {
-      count++;
-      updateBoats();
-    });
-    decrementButton.addEventListener("click", () => {
-      if (count !== 0) {
-        count--;
-        updateBoats();
-      }
-    });
-  
-    // i slutändan returneras elementet som skapades med document.createElement("div")
-    return about;
-  }
+    </section>
+  `;
 
 
-// 2. Använda global state
-// import { getCount, setCount } from "../../lib/store.ts";
-
-// export default function about() {
-//   const about = document.createElement("div");
-//   about.classList.add("about");
-//   const currentCount = getCount();
-  
-//   // Sätt HTML-innehåll
-//   about.innerHTML = `
-//     <h2>how many boats?</h2>
-//     <h2 id="boatHeading">${Array.from({ length: currentCount }, (_) => "⛵️").join("")}</h2>
-//     <div class="buttons">
-//       <button id="incrementButton">Add boats</button>
-//       <button id="decrementButton">Remove boats</button>
-//     </div>
-//   `;
-
-//   // Hämta referenser till element
-//   const incrementButton = about.querySelector<HTMLButtonElement>("#incrementButton")!;
-//   const decrementButton = about.querySelector<HTMLButtonElement>("#decrementButton")!;
-
-
-
-//   // Event listeners - använder global state
-//   incrementButton.addEventListener("click", () => {
-//     const currentCount = getCount();
-//     setCount(currentCount + 1);
-//     // renderApp() triggas automatiskt av setCount(), vilket kör about() om helt
-//   });
-
-//   decrementButton.addEventListener("click", () => {
-//     const currentCount = getCount();
-//     if (currentCount > 0) {
-//       setCount(currentCount - 1);
-//       // renderApp() triggas automatiskt av setCount(), vilket kör about() om helt
-//     }
-//   });
-
-//   // Initial uppdatering
-// //   updateBoats();
-
-//   return about;
-// }
-
-
+  return about;
+}

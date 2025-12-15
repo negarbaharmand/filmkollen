@@ -1,35 +1,34 @@
-class Store {
-    private state: { count: number };
-    private renderCallback: (() => void) | null;
+// src/lib/store.ts – exempel
+// Importera types eller interfaces som behövs!
+import type { Movie } from "../types/movie";
 
-    constructor() {
-      this.state = {
-        count: 1,
-      };
-      this.renderCallback = null;
+
+  class Store {
+    private state: { watchlist: Movie[] } = { watchlist: [] };
+    private renderCallback: (() => void) | null = null;
+
+    // Definera metoder för att hantera state
+    setWatchlist(movies: Movie[]) {
+      this.state.watchlist = movies;
+      this.triggerRender(); // Viktigt: uppdatera UI när state ändras
     }
-  
-    getCount() {
-      return this.state.count;
+
+    getWatchlist() {
+      return this.state.watchlist;
     }
-  
-    setCount(newCount: number) {
-      this.state.count = newCount;
-      this.triggerRender();
-    }
-  
+
+
     setRenderCallback(renderApp: () => void) {
       this.renderCallback = renderApp;
     }
-  
-    triggerRender() {
-      if (this.renderCallback) {
-        this.renderCallback();
-      }
+
+    private triggerRender() {
+      this.renderCallback?.();
     }
   }
-  const store = new Store();
-  
-  export const getCount = store.getCount.bind(store);
-  export const setCount = store.setCount.bind(store);
-  export const setRenderCallback = store.setRenderCallback.bind(store);
+
+const store = new Store();
+// Exportera funktioner för att hantera state
+export const setWatchlist = store.setWatchlist.bind(store);
+export const getWatchlist = store.getWatchlist.bind(store);
+export const setRenderCallback = store.setRenderCallback.bind(store);
