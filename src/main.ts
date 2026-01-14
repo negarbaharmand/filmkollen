@@ -6,6 +6,7 @@ import { setRenderCallback } from "./lib/store.ts";
 import headerHTML from "./views/static/header/index.html?raw";
 import homeHTML from "./views/static/home/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
+import browse from "./views/browse/index.ts";
 
 
 // Dynamiska sidor
@@ -16,7 +17,7 @@ const currentPage = (): string | HTMLElement => {
   const path = window.location.pathname;
    switch (path) {
     case "/":
-      return homeHTML;
+      return browse();
     case "/about":
       return about();
     default:
