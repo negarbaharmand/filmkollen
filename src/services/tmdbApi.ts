@@ -4,8 +4,8 @@
 import type { TMDBMovie, TMDBListResponse, TMDBMovieRaw } from "../types/movie";
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY as string;
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-export const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL as string;
+export const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL as string;
 
 function transformMovie(raw: TMDBMovieRaw): TMDBMovie {
     return {
