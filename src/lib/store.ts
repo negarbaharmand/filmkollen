@@ -1,31 +1,24 @@
+// Global state: browseMovies, watchlist, watched, selectedMovie, loading, error
 import type { TMDBMovie } from "../types/movie";
-import { getPopularMoviesTMDB  } from "../services/tmdbApi.ts";
+import { getPopularMovies } from "../services/tmdbApi";
 
 class Store {
   renderCallback: () => void;
 
-  
   // TMDB API state
   popularMovies: TMDBMovie[] = [];
+  browseMovies: TMDBMovie[] = [];
+  
+  // TODO: Add watchlist, watched, selectedMovie, loading, error states
+  // watchlist: DatabaseMovie[] = [];
+  // watched: DatabaseMovie[] = [];
+  // selectedMovie: TMDBMovie | null = null;
+  // loading: boolean = false;
+  // error: string | null = null;
+
   constructor() {
     this.renderCallback = () => {};
   }
-
-  
-  async loadPopularMovies(shouldTriggerRender: boolean = true) {
-    try {
-      this.popularMovies = await getPopularMoviesTMDB();
-      if (shouldTriggerRender) {
-        this.triggerRender();
-      }
-      
-      return this.popularMovies;
-    } catch (error) {
-      console.error("Failed to load popular movies:", error);
-      return [];
-    }
-  }
-
 
   // ========== RENDER CALLBACK ==========
   
@@ -38,10 +31,27 @@ class Store {
       this.renderCallback();
     }
   }
+
+  // ========== POPULAR MOVIES ==========
+  
+  async loadPopularMovies() {
+    try {
+      this.popularMovies = await getPopularMovies(1);
+      this.browseMovies = this.popularMovies;
+      this.triggerRender();
+    } catch (error) {
+      console.error("Failed to load popular movies:", error);
+      throw error;
+    }
+  }
 }
 
 const store = new Store();
 
-
-export const loadPopularMovies = store.loadPopularMovies.bind(store);  // Async
+// Export bound methods for easier usage
+export const loadPopularMovies = store.loadPopularMovies.bind(store);
 export const setRenderCallback = store.setRenderCallback.bind(store);
+export const triggerRender = store.triggerRender.bind(store);
+
+// Export store instance for direct access if needed
+export default store;
