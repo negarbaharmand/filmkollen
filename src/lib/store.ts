@@ -1,6 +1,7 @@
 // Global state: browseMovies, watchlist, watched, selectedMovie, loading, error
-import type { TMDBMovie } from "../types/movie";
+import type { TMDBMovie, DatabaseMovie } from "../types/movie";
 import { getPopularMovies } from "../services/tmdbApi";
+import { getAllMovies } from "../services/movieApi";
 
 class Store {
   renderCallback: () => void;
@@ -15,6 +16,10 @@ class Store {
   // selectedMovie: TMDBMovie | null = null;
   // loading: boolean = false;
   // error: string | null = null;
+  
+  // Database movie state - sparar filmer från backend för watchlist/watched -Ella
+  watchlistMovies: DatabaseMovie[] = [];
+  watchedMovies: DatabaseMovie[] = [];
 
   constructor() {
     this.renderCallback = () => {};
@@ -43,6 +48,29 @@ class Store {
       console.error("Failed to load popular movies:", error);
       throw error;
     }
+  }
+
+  // ========== DATABASE MOVIES ==========
+  // Hämtar sparade filmer från backend och delar upp dem efter status -Ella
+  async loadDatabaseMovies() {
+    try {
+      const allMovies = await getAllMovies();
+      this.watchlistMovies = allMovies.filter(movie => movie.status === 'watchlist');
+      this.watchedMovies = allMovies.filter(movie => movie.status === 'watched');
+      this.triggerRender();
+    } catch (error) {
+      console.error("Failed to load database movies:", error);
+    }
+  }
+
+  // Check if movie is in watchlist or watched
+  // Används för att visa rätt text på knapparna -Ella
+  isInWatchlist(tmdbId: number): boolean {
+    return this.watchlistMovies.some(movie => movie.tmdb_id === tmdbId);
+  }
+
+  isWatched(tmdbId: number): boolean {
+    return this.watchedMovies.some(movie => movie.tmdb_id === tmdbId);
   }
 }
 

@@ -2,14 +2,20 @@
 import type { TMDBMovie } from "../../types/movie";
 import { getPopularMovies, searchMovies, getPosterUrl } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
+import { toggleWatchlist, toggleWatched } from "../../services/movieApi";
+import store from "../../lib/store";
 
 function movieCard(m: TMDBMovie): string {
     const poster = getPosterUrl(m.posterPath);
     const year = m.releaseDate ? m.releaseDate.slice(0, 4) : "—";
     const rating = Number.isFinite(m.voteAverage) ? m.voteAverage.toFixed(1) : "—";
+    
+    // Kollar om filmen finns i watchlist eller watched för att visa rätt knapptext -Ella
+    const isInWatchlist = store.isInWatchlist(m.id);
+    const isWatched = store.isWatched(m.id);
 
     return `
-        <article class="movie-card">
+        <article class="movie-card" data-movie-id="${m.id}">
             <div class="movie-card__poster">
                 ${
                     poster
@@ -20,6 +26,16 @@ function movieCard(m: TMDBMovie): string {
             <h3 class="movie-card__title">${m.title}</h3>
             <p class="movie-card__meta">⭐ ${rating} · ${year}</p>
             <p class="movie-card__overview">${m.overview ?? ""}</p>
+            <div class="movie-card__actions">
+                <!-- Watchlist-knapp: lägger till/tar bort film från watchlist -Ella -->
+                <button class="btn-watchlist" data-action="watchlist">
+                    ${isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                </button>
+                <!-- Watched-knapp: markerar film som sedd/osedd -Ella -->
+                <button class="btn-watched" data-action="watched">
+                    ${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}
+                </button>
+            </div>
         </article>
     `;
 }
@@ -71,6 +87,7 @@ export default function browse(): HTMLElement {
         topRoot.innerHTML = "Loading...";
         restRoot.innerHTML = "";
         try {
+            await store.loadDatabaseMovies();
             popularCache = await getPopularMovies(1);
             renderSplit(topRoot, restRoot, popularCache);
         } catch (error) {
@@ -81,6 +98,38 @@ export default function browse(): HTMLElement {
     };
 
     void loadPopular();
+
+    // Event listener för knappklick - hanterar watchlist/watched-knappar -Ella
+    root.addEventListener('click', async (e) => {
+        const target = e.target as HTMLElement;
+        const action = target.getAttribute('data-action');
+        
+        if (!action) return;
+        
+        const card = target.closest('.movie-card') as HTMLElement;
+        if (!card) return;
+        
+        const movieId = parseInt(card.getAttribute('data-movie-id') || '0', 10);
+        const movie = popularCache.find(m => m.id === movieId);
+        
+        if (!movie) return;
+        
+        try {
+            // Anropar rätt toggle-funktion baserat på vilken knapp som klickades -Ella
+            if (action === 'watchlist') {
+                await toggleWatchlist(movie);
+            } else if (action === 'watched') {
+                await toggleWatched(movie);
+            }
+            
+            // Laddar om databasen och uppdaterar vyn -Ella
+            await store.loadDatabaseMovies();
+            renderSplit(topRoot, restRoot, popularCache);
+        } catch (error) {
+            console.error('Error toggling movie status:', error);
+            alert('Failed to update movie status. Please try again.');
+        }
+    });
 
     renderSearch(searchRoot, async (value: string) => {
         const q = value.trim();
