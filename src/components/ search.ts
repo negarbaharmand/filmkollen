@@ -10,6 +10,7 @@ export function renderSearch(
             placeholder="Search movies..." 
             aria-label="Search movies"
         />
+        <i class="fa-solid fa-search fa-xl" ></i>
     `;
 
     const input = root.querySelector<HTMLInputElement>("#movie-search")!;
