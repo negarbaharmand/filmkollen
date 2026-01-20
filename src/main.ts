@@ -8,8 +8,15 @@ import footerHTML from "./views/static/footer/index.html?raw";
 // Dynamic pages
 import browse from "./views/browse/index.ts";
 import about from "./views/about/index.ts";
+import { setupNavHighlighting } from "./lib/helpers.ts";
 import watchlist from "./views/watchlist/index.ts";  
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupNavHighlighting();
+});
+ 
 const currentPage = (): string | HTMLElement => {
   const path = window.location.pathname;
   switch (path) {
@@ -42,6 +49,8 @@ const renderApp = () => {
 
      app.insertBefore(page, app.querySelector("footer")!);
   }
+  // Re-run nav highlighting after the new DOM exists
+  setupNavHighlighting();
 };
 
 //initialise app rendering

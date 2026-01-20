@@ -5,6 +5,7 @@ import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
 
 
+
 function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMovie[]) {
     const top5 = movies.slice(0, 5);
     const rest = movies.slice(5);
@@ -13,8 +14,10 @@ function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMo
         ? top5.map(movieCard).join("")
         : '<p class="empty-state">No movies found</p>';
     restRoot.innerHTML = rest.length > 0 
-        ? rest.map(movieCard).join("")
+        ? rest.map(movieCard).join("") 
         : "";
+
+    attachDescriptionState()
 }
 
 function renderError(root: HTMLElement, message: string) {
@@ -26,15 +29,16 @@ export default function browse(): HTMLElement {
     root.className = "browse";
 
     root.innerHTML = `
-        <section class="browse__header">
-            <h1>Movies</h1>
-            <div id="search-root"></div>
-        </section>
 
         <section class="browse__section">
             <h2>Top 5</h2>
-            <div id="top5" class="movie-grid" aria-live="polite"></div>
+            <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
+
+        <section class="browse__search">
+            <div id="search-root"></div>
+        </section>
+
 
         <section class="browse__section">
             <h2>More</h2>
@@ -85,4 +89,18 @@ export default function browse(): HTMLElement {
     });
 
     return root;
+}
+
+function attachDescriptionState() {
+    const top5MovieCards = document.querySelectorAll(".movie-card")
+    top5MovieCards?.forEach(movieCard => {
+        const poster = movieCard.querySelector(".movie-card__poster")
+        poster?.addEventListener("click", () => {
+            movieCard.classList.toggle("show-description")
+            if (movieCard.classList.contains("show-description")) {
+                const rest = Array.from(top5MovieCards).filter(movie => movie !== movieCard);
+                rest.forEach(card => card.classList.remove("show-description"));            
+            }
+        })
+    })
 }
