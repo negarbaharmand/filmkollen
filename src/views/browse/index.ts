@@ -82,18 +82,31 @@ export default function browse(): HTMLElement {
     const searchRoot = root.querySelector<HTMLElement>("#search-root")!;
 
     let popularCache: TMDBMovie[] = [];
+    let isLoading = false; // Prevent multiple simultaneous loads -Ella
 
     const loadPopular = async () => {
+        if (isLoading) return; // Already loading -Ella
+        isLoading = true;
+        
         topRoot.innerHTML = "Loading...";
         restRoot.innerHTML = "";
         try {
-            await store.loadDatabaseMovies();
+            // Try to load database movies, but don't block if backend is down -Ella
+            try {
+                await store.loadDatabaseMovies();
+            } catch (dbError) {
+                console.warn("Backend not available, continuing without watchlist/watched data:", dbError);
+            }
+            
+            // Load TMDB movies regardless of backend status
             popularCache = await getPopularMovies(1);
             renderSplit(topRoot, restRoot, popularCache);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to load movies";
             renderError(topRoot, `Error: ${errorMessage}`);
             restRoot.innerHTML = "";
+        } finally {
+            isLoading = false; // Allow future loads -Ella
         }
     };
 
@@ -105,6 +118,10 @@ export default function browse(): HTMLElement {
         const action = target.getAttribute('data-action');
         
         if (!action) return;
+        
+        // Prevent any default button behavior -Ella
+        e.preventDefault();
+        e.stopPropagation();
         
         const card = target.closest('.movie-card') as HTMLElement;
         if (!card) return;
@@ -124,10 +141,17 @@ export default function browse(): HTMLElement {
             
             // Reloads the database and updates the view -Ella
             await store.loadDatabaseMovies();
-            renderSplit(topRoot, restRoot, popularCache);
+            
+            // Make sure popularCache still has movies before re-rendering -Ella
+            if (popularCache.length > 0) {
+                renderSplit(topRoot, restRoot, popularCache);
+            } else {
+                console.error('popularCache is empty, not re-rendering');
+            }
         } catch (error) {
             console.error('Error toggling movie status:', error);
-            alert('Failed to update movie status. Please try again.');
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            alert(`Failed to update movie status: ${errorMessage}\n\nMake sure the backend server is running on http://localhost:3000`);
         }
     });
 

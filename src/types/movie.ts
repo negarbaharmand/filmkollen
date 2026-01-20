@@ -58,3 +58,37 @@ export interface CreateMovieRequest {
     is_favorite?: boolean;
     date_watched?: string | null;
 }
+
+// Sent to backend when updating an existing movie -Ella
+export interface UpdateMovieRequest {
+    status?: 'watchlist' | 'watched';
+    personal_rating?: number | null;
+    review?: string | null;
+    is_favorite?: boolean;
+    date_watched?: string | null;
+}
+// Types for Watchlist movies
+export interface WatchlistMovieRaw {
+    id: number;
+    title: string;
+    poster_path: string | null;
+    release_date: string;
+    vote_average: number;
+    added_date?: string;
+}
+
+
+export interface WatchlistMovie {
+    id: number;
+    poster: string | null;
+    title: string;
+    releaseYear: string;
+    rating: number;
+    addedDate: string;
+}
+
+
+export interface WatchlistResponse {
+    movies: WatchlistMovie[];
+    totalCount: number;
+}

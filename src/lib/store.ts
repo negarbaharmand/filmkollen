@@ -43,7 +43,7 @@ class Store {
     try {
       this.popularMovies = await getPopularMovies(1);
       this.browseMovies = this.popularMovies;
-      this.triggerRender();
+      //this.triggerRender();
     } catch (error) {
       console.error("Failed to load popular movies:", error);
       throw error;
