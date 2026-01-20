@@ -144,6 +144,8 @@ export default function browse(): HTMLElement {
 
         try {
             const results = await searchMovies(q, 1);
+            // Uppdatera popularCache med sökresultat så knapparna fungerar -Ella
+            popularCache = results;
             renderSplit(topRoot, restRoot, results);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to search movies";
