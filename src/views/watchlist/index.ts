@@ -8,7 +8,7 @@ export default function watchlist(): HTMLElement {
     const container = document.createElement('main');
     container.className = 'watchlist-page';
 
-    // Initial struktur
+    // Initial HTML structure
     container.innerHTML = `
         <div class="watchlist-header">
             <h1>Min Watchlist</h1>
@@ -17,12 +17,12 @@ export default function watchlist(): HTMLElement {
         <div id="watchlistContainer" class="movies-grid"></div>
     `;
 
-    // Ladda watchlist
+    //loading the watchlist
     loadWatchlist(container);
 
     return container;
 }
- //funktion för att ladda watchlistan 
+ //function to load watchlist data
 async function loadWatchlist(container: HTMLElement): Promise<void> {
     try {
         const data = await getWatchList(TMDB_ACCOUNT_ID);
@@ -32,32 +32,32 @@ async function loadWatchlist(container: HTMLElement): Promise<void> {
         renderMovies(container, [], 0);
     }
 }
- //funktion för att rendera filmerna i watchlistan
+ //function to render movies in the watchlist
 function renderMovies(container: HTMLElement, movies: WatchlistMovie[], totalCount: number): void {
     const filmCount = container.querySelector('#filmCount');
     const moviesContainer = container.querySelector('#watchlistContainer');
 
     if (!filmCount || !moviesContainer) return;
 
-    // Uppdatera antal
-    filmCount.textContent = `${totalCount} ${totalCount === 1 ? 'film' : 'filmer'}`;
+    // update film count
+    filmCount.textContent = `${totalCount} ${totalCount === 1 ? 'Movie' : 'Movies'}`;
 
-    // Om tom
+    // if no movies, show empty message
     if (movies.length === 0) {
-        moviesContainer.innerHTML = '<p class="empty-message">Din watchlist är tom. Börja lägga till filmer!</p>';
+        moviesContainer.innerHTML = '<p class="empty-message">Your watchlist is empty. Start adding movies!</p>';
         return;
     }
 
-    // Rendera filmer
+    // render movie cards
     moviesContainer.innerHTML = movies
         .map(movie => createMovieCard(movie))
         .join('');
 }
 
-// funktion för att skapa ett filmkort
+// Function to create a movie card HTML
 function createMovieCard(movie: WatchlistMovie): string {
     const posterUrl = movie.poster || 'https://via.placeholder.com/500x750?text=No+Poster';
-    const addedDate = new Date(movie.addedDate).toLocaleDateString('sv-SE', {
+    const addedDate = new Date(movie.addedDate).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -70,7 +70,7 @@ function createMovieCard(movie: WatchlistMovie): string {
                 <h3 class="movie-title">${movie.title}</h3>
                 <p class="release-year">📅 ${movie.releaseYear}</p>
                 <p class="rating">⭐ ${movie.rating.toFixed(1)}/10</p>
-                <p class="added-date">Tillagd: ${addedDate}</p>
+                <p class="added-date">Added: ${addedDate}</p>
             </div>
         </div>
     `;

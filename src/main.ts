@@ -1,11 +1,11 @@
 import "./style.css";
 import { setRenderCallback } from "./lib/store.ts";
 
-// Statiska sidor
+// static HTML
 import headerHTML from "./views/static/header/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
 
-// Dynamiska sidor
+// Dynamic pages
 import browse from "./views/browse/index.ts";
 import about from "./views/about/index.ts";
 import watchlist from "./views/watchlist/index.ts";  
