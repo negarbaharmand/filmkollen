@@ -60,7 +60,7 @@ export interface ExpressMovie {
 }
 
 // type for response when we fetch watchlist
-export interface WatchlistResponse {
+export interface ExpressMovieResponse {
     movies: Movie[];
     totalCount: number;
 }
