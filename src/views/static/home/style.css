@@ -129,9 +129,10 @@ main {
 
 .movie-card__actions {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: end;
     gap: 0.5rem;
+    margin-top: auto;
 }
 
 #addToWatched {
@@ -150,15 +151,13 @@ main {
     flex-shrink: 0;
 }
 
-
-.movie-card__actors {
-    font-size: 0.7em;
-    margin: 0;
-}
-
 .movie-card__poster img {
     height: 20rem;
     object-fit:contain;
+}
+
+.movie-card__added-date {
+    margin: 0;
 }
 
 

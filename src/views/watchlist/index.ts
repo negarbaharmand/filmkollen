@@ -1,5 +1,6 @@
 // src/views/watchlist/index.ts
 import { MovieCard } from '../../components/movieCard';
+import { attachDescriptionState } from '../../lib/helpers';
 import { getMoviesByStatus } from '../../services/movieApi';
 import type { Movie } from '../../types/movie';
 
@@ -13,7 +14,7 @@ export default function watchlist(): HTMLElement {
             <h1>Min Watchlist</h1>
             <p class="film-count" id="filmCount">Laddar...</p>
         </div>
-        <div id="watchlistContainer" class="movies-grid"></div>
+        <div id="watchlistContainer" class="movie-grid"></div>
     `;
 
     //loading the watchlist
@@ -51,5 +52,7 @@ function renderMovies(container: HTMLElement, movies: Movie[], totalCount: numbe
     moviesContainer.innerHTML = movies
         .map(movie => MovieCard(movie))
         .join('');
+
+    attachDescriptionState()
 }
 

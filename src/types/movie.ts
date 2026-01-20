@@ -26,7 +26,7 @@ export interface Movie {
     poster: string | null;
     releaseYear: string;
     rating: string;
-    overview: string | null;
+    overview: string;
     status: 'watchlist' | 'watched';
     personal_rating: number | null;
     review: string | null;

@@ -9,14 +9,28 @@ export function MovieCard(movie: Movie): string {
     });
 
     return `
-        <div class="movie-card" data-movie-id="${movie.id}">
-            <img src="${posterUrl}" alt="${movie.title}" class="movie-poster">
-            <div class="movie-info">
-                <h3 class="movie-title">${movie.title}</h3>
-                <p class="release-year">📅 ${movie.releaseYear}</p>
-                <p class="rating">⭐ ${movie.rating}/10</p>
-                <p class="added-date">Added: ${addedDate}</p>
+        <article class="movie-card" data-movie-id="${movie.id}">
+            <div class="movie-card__poster">
+                <img src="${posterUrl}" alt="Poster for ${movie.title}" loading="lazy" />
+            
             </div>
-        </div>
-    `;
+            <div class="movie-card__details">
+                <p class="movie-card__rating">⭐ ${movie.rating} </p>
+                <h3 class="movie-card__title">${movie.title}</h3>
+                <p class="movie-card__meta">${movie.releaseYear} ${movie.adult ? "18+" : ""} </p>
+                <div class="movie-card__overview-wrapper">
+                    <p class="movie-card__overview">${movie.overview ?? ""}</p>
+                </div>
+                <div class="movie-card__footer">
+                    <p class="movie-card__added-date">Added: ${addedDate}</p>
+
+                    <div class="movie-card__actions">
+                        <button id="addToWatched"><i class="fa-solid fa-eye fa-xl"></i></button>
+                        <button id="addToWatchlist">+</button>
+                    </div>
+                </div>
+            </div>
+        </article>
+    ` 
 }
+

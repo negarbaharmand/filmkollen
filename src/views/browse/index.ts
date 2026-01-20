@@ -3,6 +3,7 @@ import type { TMDBMovie } from "../../types/movie";
 import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
+import { attachDescriptionState } from "../../lib/helpers";
 
 
 
@@ -91,16 +92,3 @@ export default function browse(): HTMLElement {
     return root;
 }
 
-function attachDescriptionState() {
-    const top5MovieCards = document.querySelectorAll(".movie-card")
-    top5MovieCards?.forEach(movieCard => {
-        const poster = movieCard.querySelector(".movie-card__poster")
-        poster?.addEventListener("click", () => {
-            movieCard.classList.toggle("show-description")
-            if (movieCard.classList.contains("show-description")) {
-                const rest = Array.from(top5MovieCards).filter(movie => movie !== movieCard);
-                rest.forEach(card => card.classList.remove("show-description"));            
-            }
-        })
-    })
-}

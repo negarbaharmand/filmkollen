@@ -27,6 +27,7 @@ export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promis
                 : 0,
             rating: raw.vote_average,
             addedDate: raw.date_added || new Date().toISOString(),
+            overview: raw.overview
         })),
         totalCount: data.length,
     };
