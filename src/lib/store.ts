@@ -17,7 +17,7 @@ class Store {
   // loading: boolean = false;
   // error: string | null = null;
   
-  // Database movie state - sparar filmer från backend för watchlist/watched -Ella
+  // Database movie state - stores movies from backend for watchlist/watched -Ella
   watchlistMovies: DatabaseMovie[] = [];
   watchedMovies: DatabaseMovie[] = [];
 
@@ -51,7 +51,7 @@ class Store {
   }
 
   // ========== DATABASE MOVIES ==========
-  // Hämtar sparade filmer från backend och delar upp dem efter status -Ella
+  // Fetches saved movies from backend and separates them by status -Ella
   async loadDatabaseMovies() {
     try {
       const allMovies = await getAllMovies();
@@ -64,7 +64,7 @@ class Store {
   }
 
   // Check if movie is in watchlist or watched
-  // Används för att visa rätt text på knapparna -Ella
+  // Used to display the correct text on the buttons -Ella
   isInWatchlist(tmdbId: number): boolean {
     return this.watchlistMovies.some(movie => movie.tmdb_id === tmdbId);
   }

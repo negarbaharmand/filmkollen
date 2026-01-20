@@ -26,7 +26,7 @@ export type TMDBMovieRaw = {
 };
 
 
-// Används för att lagra filmer i watchlist och watched-listan -Ella
+// Used to store movies in watchlist and watched list -Ella
 export interface DatabaseMovie {
     id: number;
     tmdb_id: number;
@@ -44,7 +44,7 @@ export interface DatabaseMovie {
 }
 
 
-// Skickas till backend när man lägger till film i watchlist/watched -Ella
+// Sent to backend when adding movie to watchlist/watched -Ella
 export interface CreateMovieRequest {
     tmdb_id: number;
     title: string;

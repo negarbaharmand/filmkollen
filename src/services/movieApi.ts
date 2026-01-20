@@ -60,7 +60,7 @@ export async function deleteMovie(id: number): Promise<void> {
 }
 
 
-// Växlar mellan att lägga till och ta bort film från watchlist -Ella
+// Toggles between adding and removing movie from watchlist -Ella
 export async function toggleWatchlist(movie: TMDBMovie): Promise<DatabaseMovie | null> {
     const existing = await findMovieByTmdbId(movie.id);
     
@@ -78,7 +78,7 @@ export async function toggleWatchlist(movie: TMDBMovie): Promise<DatabaseMovie |
 }
 
 
-// Växlar mellan att markera film som sedd och ta bort från watched -Ella
+// Toggles between marking movie as watched and removing from watched -Ella
 export async function toggleWatched(movie: TMDBMovie): Promise<DatabaseMovie | null> {
     const existing = await findMovieByTmdbId(movie.id);
     

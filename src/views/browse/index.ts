@@ -10,7 +10,7 @@ function movieCard(m: TMDBMovie): string {
     const year = m.releaseDate ? m.releaseDate.slice(0, 4) : "—";
     const rating = Number.isFinite(m.voteAverage) ? m.voteAverage.toFixed(1) : "—";
     
-    // Kollar om filmen finns i watchlist eller watched för att visa rätt knapptext -Ella
+    // Check if movie is in watchlist or watched to show correct button text -Ella
     const isInWatchlist = store.isInWatchlist(m.id);
     const isWatched = store.isWatched(m.id);
 
@@ -27,11 +27,11 @@ function movieCard(m: TMDBMovie): string {
             <p class="movie-card__meta">⭐ ${rating} · ${year}</p>
             <p class="movie-card__overview">${m.overview ?? ""}</p>
             <div class="movie-card__actions">
-                <!-- Watchlist-knapp: lägger till/tar bort film från watchlist -Ella -->
+                <!-- Watchlist button: adds/removes movie from watchlist -Ella -->
                 <button class="btn-watchlist" data-action="watchlist">
                     ${isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
                 </button>
-                <!-- Watched-knapp: markerar film som sedd/osedd -Ella -->
+                <!-- Watched button: marks movie as watched/unwatched -Ella -->
                 <button class="btn-watched" data-action="watched">
                     ${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}
                 </button>
@@ -99,7 +99,7 @@ export default function browse(): HTMLElement {
 
     void loadPopular();
 
-    // Event listener för knappklick - hanterar watchlist/watched-knappar -Ella
+    // Event listener for button clicks - handles watchlist/watched buttons -Ella
     root.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
         const action = target.getAttribute('data-action');
@@ -115,14 +115,14 @@ export default function browse(): HTMLElement {
         if (!movie) return;
         
         try {
-            // Anropar rätt toggle-funktion baserat på vilken knapp som klickades -Ella
+            // Calls the correct toggle function based on which button was clicked -Ella
             if (action === 'watchlist') {
                 await toggleWatchlist(movie);
             } else if (action === 'watched') {
                 await toggleWatched(movie);
             }
             
-            // Laddar om databasen och uppdaterar vyn -Ella
+            // Reloads the database and updates the view -Ella
             await store.loadDatabaseMovies();
             renderSplit(topRoot, restRoot, popularCache);
         } catch (error) {
@@ -144,7 +144,7 @@ export default function browse(): HTMLElement {
 
         try {
             const results = await searchMovies(q, 1);
-            // Uppdatera popularCache med sökresultat så knapparna fungerar -Ella
+            // Update popularCache with search results so buttons work -Ella
             popularCache = results;
             renderSplit(topRoot, restRoot, results);
         } catch (error) {
