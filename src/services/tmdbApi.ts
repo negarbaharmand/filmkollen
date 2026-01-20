@@ -18,11 +18,13 @@ export const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL as s
 function transformMovie(raw: TMDBMovieRaw): TMDBMovie {
   return {
     id: raw.id,
+    tmdb_id: undefined,
     title: raw.title,
     overview: raw.overview,
-    posterPath: raw.poster_path,
-    releaseDate: raw.release_date,
-    voteAverage: raw.vote_average,
+    poster: raw.poster_path,
+    releaseYear: raw.release_date ? raw.release_date.slice(0, 4) : "—",
+    adult: raw.adult, 
+    rating: Number.isFinite(raw.vote_average) ? raw.vote_average.toFixed(1) : "—"
   };
 }
 

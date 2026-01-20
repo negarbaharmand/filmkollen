@@ -1,12 +1,3 @@
-//Types for TMDB + Database movies + request bodies
-export interface TMDBMovie {
-    id: number;
-    title: string;
-    overview: string;
-    posterPath: string | null;
-    releaseDate: string;
-    voteAverage: number;
-}
 
 // Raw API response types (snake_case from TMDB API)
 export type TMDBListResponse<T> = {
@@ -15,7 +6,7 @@ export type TMDBListResponse<T> = {
     total_pages: number;
     total_results: number;
 };
-
+// type for data we GET for TMDB movies
 export type TMDBMovieRaw = {
     id: number;
     title: string;
@@ -23,31 +14,53 @@ export type TMDBMovieRaw = {
     poster_path: string | null;
     release_date: string;
     vote_average: number;
+    adult: boolean,
 };
 
 
-// Types for Watchlist movies
-export interface WatchlistMovieRaw {
+// type to store movies in watchlist and watched list 
+export interface Movie {
     id: number;
+    tmdb_id: number;
+    title: string;
+    poster: string | null;
+    releaseYear: string;
+    rating: string;
+    overview: string | null;
+    status: 'watchlist' | 'watched';
+    personal_rating: number | null;
+    review: string | null;
+    is_favorite: number;
+    addedDate: string;
+    date_watched: string | null;
+    adult: boolean,
+}
+
+// type for movies in browse page that dont yet have an instance in our db
+export interface TMDBMovie extends Omit<Movie, 'tmdb_id' | 'status' | 'personal_rating' | 'review' | 'is_favorite' | 'addedDate' | 'date_watched'> {
+  tmdb_id: undefined; 
+}
+
+
+// type of movie we send/receive from exress db
+export interface ExpressMovie {
+    id: number;
+    tmdb_id: number;
     title: string;
     poster_path: string | null;
-    release_date: string;
-    vote_average: number;
-    added_date?: string;
+    release_date: string | null;
+    vote_average: number | null;
+    overview: string | null;
+    status: 'watchlist' | 'watched';
+    personal_rating: number | null;
+    review: string | null;
+    is_favorite: boolean;
+    date_added: string;
+    date_watched: string | null;
 }
 
-
-export interface WatchlistMovie {
-    id: number;
-    poster: string | null;
-    title: string;
-    releaseYear: string;
-    rating: number;
-    addedDate: string;
-}
-
-
+// type for response when we fetch watchlist
 export interface WatchlistResponse {
-    movies: WatchlistMovie[];
+    movies: Movie[];
     totalCount: number;
 }

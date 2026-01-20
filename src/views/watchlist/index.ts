@@ -1,8 +1,6 @@
 // src/views/watchlist/index.ts
-import { getWatchList } from '../../services/movieApi';
-import type { WatchlistMovie } from '../../types/movie';
-
-const TMDB_ACCOUNT_ID = import.meta.env.VITE_TMDB_ACCOUNT_ID as string;
+import { getMoviesByStatus } from '../../services/movieApi';
+import type { Movie } from '../../types/movie';
 
 export default function watchlist(): HTMLElement {
     const container = document.createElement('main');
@@ -25,7 +23,7 @@ export default function watchlist(): HTMLElement {
  //function to load watchlist data
 async function loadWatchlist(container: HTMLElement): Promise<void> {
     try {
-        const data = await getWatchList(TMDB_ACCOUNT_ID);
+        const data = await getMoviesByStatus("watchlist");
         renderMovies(container, data.movies, data.totalCount);
     } catch (error) {
         console.error('Error loading watchlist:', error);
@@ -33,7 +31,7 @@ async function loadWatchlist(container: HTMLElement): Promise<void> {
     }
 }
  //function to render movies in the watchlist
-function renderMovies(container: HTMLElement, movies: WatchlistMovie[], totalCount: number): void {
+function renderMovies(container: HTMLElement, movies: Movie[], totalCount: number): void {
     const filmCount = container.querySelector('#filmCount');
     const moviesContainer = container.querySelector('#watchlistContainer');
 
@@ -55,7 +53,7 @@ function renderMovies(container: HTMLElement, movies: WatchlistMovie[], totalCou
 }
 
 // Function to create a movie card HTML
-function createMovieCard(movie: WatchlistMovie): string {
+function createMovieCard(movie: Movie): string {
     const posterUrl = movie.poster || 'https://via.placeholder.com/500x750?text=No+Poster';
     const addedDate = new Date(movie.addedDate).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -69,7 +67,7 @@ function createMovieCard(movie: WatchlistMovie): string {
             <div class="movie-info">
                 <h3 class="movie-title">${movie.title}</h3>
                 <p class="release-year">📅 ${movie.releaseYear}</p>
-                <p class="rating">⭐ ${movie.rating.toFixed(1)}/10</p>
+                <p class="rating">⭐ ${movie.rating}/10</p>
                 <p class="added-date">Added: ${addedDate}</p>
             </div>
         </div>

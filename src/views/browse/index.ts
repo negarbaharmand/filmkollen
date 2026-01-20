@@ -4,9 +4,7 @@ import { getPopularMovies, searchMovies, getPosterUrl } from "../../services/tmd
 import { renderSearch } from "../../components/ search";
 
 function movieCard(m: TMDBMovie): string {
-    const poster = getPosterUrl(m.posterPath);
-    const year = m.releaseDate ? m.releaseDate.slice(0, 4) : "—";
-    const rating = Number.isFinite(m.voteAverage) ? m.voteAverage.toFixed(1) : "—";
+    const poster = getPosterUrl(m.poster);
 
     return `
         <article class="movie-card">
@@ -18,7 +16,7 @@ function movieCard(m: TMDBMovie): string {
                 }
             </div>
             <h3 class="movie-card__title">${m.title}</h3>
-            <p class="movie-card__meta">⭐ ${rating} · ${year}</p>
+            <p class="movie-card__meta">⭐ ${m.rating} · ${m.releaseYear}</p>
             <p class="movie-card__overview">${m.overview ?? ""}</p>
         </article>
     `;
