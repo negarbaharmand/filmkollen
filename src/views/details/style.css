@@ -1,0 +1,96 @@
+.movie-details-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.movie-details-overlay.is-visible {
+  display: flex;
+}
+
+.movie-details-card {
+  background: #ffffff;
+  color: #111827;
+  max-width: 900px;
+  width: 90%;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.movie-details-card__close {
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  float: right;
+}
+
+.movie-details-card__body {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.movie-details-card__poster img {
+  display: block;
+  max-width: 220px;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.movie-details-card__info {
+  flex: 1;
+}
+
+.movie-details-card__title {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+.movie-details-card__meta {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #4b5563;
+}
+
+.movie-details-card__overview {
+  margin-bottom: 1rem;
+}
+
+.movie-details-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.movie-details-card__actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.movie-details-card__actions button[data-action="mark-watched"] {
+  background: #10b981;
+}
+
+@media (max-width: 640px) {
+  .movie-details-card__body {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-details-card__poster img {
+    max-width: 160px;
+  }
+}
+
