@@ -26,6 +26,7 @@ const currentPage = (): string | HTMLElement => {
 
 const app = document.querySelector("#app")!;
 
+//function to render the app
 const renderApp = () => {
   const page = currentPage();
     
@@ -43,12 +44,15 @@ const renderApp = () => {
   }
 };
 
+//initialise app rendering
+//if the app change, it rerenders the app
 renderApp();
 
 window.addEventListener("popstate", () => {
   renderApp();
 });
-
+//Intercepting link and handling navigation
+//This prevents full page reloads and keeps the state of the SPA
 document.addEventListener("click", (e) => {
   const target = e.target as HTMLElement;
   const link = target.closest("a");
@@ -61,4 +65,5 @@ document.addEventListener("click", (e) => {
   }
 });
 
+//Set render callback to re-render app on state changes
 setRenderCallback(renderApp);
