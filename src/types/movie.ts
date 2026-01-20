@@ -24,3 +24,30 @@ export type TMDBMovieRaw = {
     release_date: string;
     vote_average: number;
 };
+
+
+// Types for Watchlist movies
+export interface WatchlistMovieRaw {
+    id: number;
+    title: string;
+    poster_path: string | null;
+    release_date: string;
+    vote_average: number;
+    added_date?: string;
+}
+
+
+export interface WatchlistMovie {
+    id: number;
+    poster: string | null;
+    title: string;
+    releaseYear: string;
+    rating: number;
+    addedDate: string;
+}
+
+
+export interface WatchlistResponse {
+    movies: WatchlistMovie[];
+    totalCount: number;
+}
