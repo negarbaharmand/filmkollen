@@ -8,9 +8,15 @@ import homeHTML from "./views/static/home/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
 import browse from "./views/browse/index.ts";
 
-
 // Dynamiska sidor
 import about from "./views/about/index.ts";
+import { setupNavHighlighting } from "./lib/helpers.ts";
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupNavHighlighting();
+});
 
 
 const currentPage = (): string | HTMLElement => {
@@ -51,6 +57,8 @@ const renderApp = () => {
 
   }
 
+  // Re-run nav highlighting after the new DOM exists
+  setupNavHighlighting();
 
 };
 

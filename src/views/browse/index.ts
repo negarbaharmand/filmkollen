@@ -3,13 +3,16 @@ import type { TMDBMovie } from "../../types/movie";
 import { getPopularMovies, searchMovies, getPosterUrl } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 
-function movieCard(m: TMDBMovie): string {
+// MOCKING MOVIE DURATION, AGE LIMIT, ACTORS LIST
+
+
+function movieCard(m: TMDBMovie, index: number): string {
     const poster = getPosterUrl(m.posterPath);
     const year = m.releaseDate ? m.releaseDate.slice(0, 4) : "—";
     const rating = Number.isFinite(m.voteAverage) ? m.voteAverage.toFixed(1) : "—";
 
     return `
-        <article class="movie-card">
+        <article class="movie-card" >
             <div class="movie-card__poster">
                 ${
                     poster
@@ -17,9 +20,22 @@ function movieCard(m: TMDBMovie): string {
                         : `<div class="poster-placeholder" aria-label="No poster available"></div>`
                 }
             </div>
-            <h3 class="movie-card__title">${m.title}</h3>
-            <p class="movie-card__meta">⭐ ${rating} · ${year}</p>
-            <p class="movie-card__overview">${m.overview ?? ""}</p>
+            <div class="movie-card__details">
+                <p class="movie-card__rating">⭐ ${rating} </p>
+                <h3 class="movie-card__title">${m.title}</h3>
+                <p class="movie-card__meta">${year} · 3h 1m  · 11+ </p>
+                <div class="movie-card__overview-wrapper">
+                    <p class="movie-card__overview">${m.overview ?? ""}</p>
+                </div>
+                <div class="movie-card__footer">
+                    <p class="movie-card__actors">Sam Worthington, Zoe Saldana, Sigourney weaver</p>
+                    <div class="movie-card__actions">
+                        <button id="addToWatched"><i class="fa-solid fa-eye fa-xl"></i></button>
+                        <button id="addToWatchlist">+</button>
+                    </div>
+                </div>
+            </div>
+            <p class="movie-card__place" >0${index + 1}</p>
         </article>
     `;
 }
@@ -32,8 +48,10 @@ function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMo
         ? top5.map(movieCard).join("")
         : '<p class="empty-state">No movies found</p>';
     restRoot.innerHTML = rest.length > 0 
-        ? rest.map(movieCard).join("")
+        ? rest.map(movieCard).join("") 
         : "";
+
+    attachDescriptionState()
 }
 
 function renderError(root: HTMLElement, message: string) {
@@ -45,15 +63,16 @@ export default function browse(): HTMLElement {
     root.className = "browse";
 
     root.innerHTML = `
-        <section class="browse__header">
-            <h1>Movies</h1>
-            <div id="search-root"></div>
-        </section>
 
         <section class="browse__section">
             <h2>Top 5</h2>
-            <div id="top5" class="movie-grid" aria-live="polite"></div>
+            <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
+
+        <section class="browse__search">
+            <div id="search-root"></div>
+        </section>
+
 
         <section class="browse__section">
             <h2>More</h2>
@@ -104,4 +123,18 @@ export default function browse(): HTMLElement {
     });
 
     return root;
+}
+
+function attachDescriptionState() {
+    const top5MovieCards = document.querySelectorAll(".movie-card")
+    top5MovieCards?.forEach(movieCard => {
+        const poster = movieCard.querySelector(".movie-card__poster")
+        poster?.addEventListener("click", () => {
+            movieCard.classList.toggle("show-description")
+            if (movieCard.classList.contains("show-description")) {
+                const rest = Array.from(top5MovieCards).filter(movie => movie !== movieCard);
+                rest.forEach(card => card.classList.remove("show-description"));            
+            }
+        })
+    })
 }

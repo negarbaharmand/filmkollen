@@ -1,13 +1,14 @@
 header {
-  background-color: var(--color-primary);
+  background-color: var(--color-background2);
   color: var(--color-text-inverse);
   padding: var(--spacing-md);
 }
 
 nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 2rem
 }
 
 nav ul {
@@ -23,9 +24,25 @@ nav ul li {
 nav ul li a {
   text-decoration: none;
   color: var(--color-text-inverse);
+
 }
+
+nav ul li a.active {
+    color: var(--color-primary);
+  }
+
+nav ul li a.active:hover {
+  color: var(--color-primary);
+}
+
 
 nav ul li a:hover {
   color: var(--color-primary-light);
 }
+
+h1 {
+  margin: 0.5rem
+}
+
+
 
