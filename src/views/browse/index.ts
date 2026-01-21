@@ -50,19 +50,17 @@ export default function browse(): HTMLElement {
     root.className = "browse";
 
     root.innerHTML = `
-
-        <section class="browse__section">
-            <h2>Top 5</h2>
+        <section class="browse__section browse__section--top">
             <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
 
-        <section class="browse__search">
-            <div id="search-root"></div>
+        <section class="browse__section browse__section--search">
+            <div class="browse__search">
+                <div id="search-root"></div>
+            </div>
         </section>
 
-
         <section class="browse__section">
-            <h2>More</h2>
             <div id="rest" class="movie-grid" aria-live="polite"></div>
         </section>
     `;
