@@ -3,7 +3,7 @@ import { MovieCard } from '../../components/movieCard';
 import { attachDescriptionState } from '../../lib/helpers';
 import { getMoviesByStatus } from '../../services/movieApi';
 import type { Movie } from '../../types/movie';
-
+import { EmptyState } from '../../components/EmptyState';
 export default function watchlist(): HTMLElement {
     const container = document.createElement('main');
     container.className = 'watchlist-page';
@@ -44,9 +44,10 @@ function renderMovies(container: HTMLElement, movies: Movie[], totalCount: numbe
 
     // if no movies, show empty message
     if (movies.length === 0) {
-        moviesContainer.innerHTML = '<p class="empty-message">Your watchlist is empty. Start adding movies!</p>';
-        return;
-    }
+        moviesContainer.innerHTML = ''
+        moviesContainer.appendChild(EmptyState("Your watchlist is empty. Start adding movies!"));
+    return;
+}
 
     // render movie cards
     moviesContainer.innerHTML = movies
