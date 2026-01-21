@@ -33,3 +33,13 @@ body {
   background-color: var(--color-background);
   color: var(--color-text);
 }
+.empty-state {
+  margin: 4rem auto;
+  text-align: center;
+  color: #888;
+}
+
+.empty-state__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}

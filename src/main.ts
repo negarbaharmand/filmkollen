@@ -1,5 +1,6 @@
 import "./style.css";
 import { setRenderCallback } from "./lib/store.ts";
+import { watched } from "./views/watched/index.ts";
 
 // static HTML
 import headerHTML from "./views/static/header/index.html?raw";
@@ -26,6 +27,8 @@ const currentPage = (): string | HTMLElement => {
       return about();
     case "/watchlist":  
       return watchlist();
+    case "/watched":
+      return watched(); 
     default:
       return "404";
   }

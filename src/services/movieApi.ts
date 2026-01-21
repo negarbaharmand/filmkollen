@@ -22,10 +22,8 @@ export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promis
             id: raw.id,
             poster: getPosterUrl(raw.poster_path),
             title: raw.title,
-            releaseYear: raw.release_date
-                ? new Date(raw.release_date).getFullYear()
-                : 0,
-            rating: raw.vote_average,
+            releaseYear: raw.release_date ?? "",
+            rating: raw.vote_average?.toString() ?? "",
             addedDate: raw.date_added || new Date().toISOString(),
             overview: raw.overview
         })),
@@ -115,4 +113,27 @@ export async function toggleWatched(movie: TMDBMovie): Promise<Movie | null> {
         // Add as watched
         return await addMovie(movie, 'watched');
     }
+}
+
+// Update a movie in the database
+export async function updateMovie(
+  id: number,
+  updates: Partial<{
+    personal_rating: number;
+    review: string;
+    is_favorite: boolean;
+    status: 'watchlist' | 'watched';
+    date_watched: string | null;
+  }>
+): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || `Failed to update movie: ${res.status}`);
+  }
 }
