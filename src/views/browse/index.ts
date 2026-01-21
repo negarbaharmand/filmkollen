@@ -4,21 +4,41 @@ import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
 import { attachDescriptionState } from "../../lib/helpers";
+import { openMovieDetailsModal } from "../../components/movieDetailsModal";
 
 
+
+function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
+  const cards = root.querySelectorAll<HTMLElement>(".movie-card");
+
+  cards.forEach((card, index) => {
+    const movie = movies[index];
+    if (!movie) return;
+
+    const detailsBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="details"]'
+    );
+
+    detailsBtn?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openMovieDetailsModal(movie);
+    });
+  });
+}
 
 function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMovie[]) {
-    const top5 = movies.slice(0, 5);
-    const rest = movies.slice(5);
+  const top5 = movies.slice(0, 5);
+  const rest = movies.slice(5);
 
-    topRoot.innerHTML = top5.length > 0 
-        ? top5.map(movieCard).join("")
-        : '<p class="empty-state">No movies found</p>';
-    restRoot.innerHTML = rest.length > 0 
-        ? rest.map(movieCard).join("") 
-        : "";
+  topRoot.innerHTML =
+    top5.length > 0
+      ? top5.map(movieCard).join("")
+      : '<p class="empty-state">No movies found</p>';
+  restRoot.innerHTML = rest.length > 0 ? rest.map(movieCard).join("") : "";
 
-    attachDescriptionState()
+  attachDescriptionState();
+  attachCardInteractions(topRoot, top5);
+  attachCardInteractions(restRoot, rest);
 }
 
 function renderError(root: HTMLElement, message: string) {

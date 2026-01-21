@@ -2,15 +2,15 @@ import { getPosterUrl } from "../services/tmdbApi";
 import type { TMDBMovie } from "../types/movie";
 
 export function movieCard(m: TMDBMovie, index: number): string {
-    const poster = getPosterUrl(m.poster);
+  const poster = getPosterUrl(m.poster);
 
-    return `
-        <article class="movie-card" >
+  return `
+        <article class="movie-card">
             <div class="movie-card__poster">
                 ${
-                    poster
-                        ? `<img src="${poster}" alt="Poster for ${m.title}" loading="lazy" />`
-                        : `<div class="poster-placeholder" aria-label="No poster available"></div>`
+                  poster
+                    ? `<img src="${poster}" alt="Poster for ${m.title}" loading="lazy" />`
+                    : `<div class="poster-placeholder" aria-label="No poster available"></div>`
                 }
             </div>
             <div class="movie-card__details">
@@ -21,11 +21,18 @@ export function movieCard(m: TMDBMovie, index: number): string {
                     <p class="movie-card__overview">${m.overview ?? ""}</p>
                 </div>
                 <div class="movie-card__actions">
-                    <button id="addToWatched"><i class="fa-solid fa-eye fa-xl"></i></button>
-                    <button id="addToWatchlist">+</button>
+                    <button class="movie-card__btn" data-action="watched">
+                        <i class="fa-solid fa-eye fa-xl"></i>
+                    </button>
+                    <button class="movie-card__btn movie-card__btn--circle" data-action="watchlist">
+                        +
+                    </button>
+                    <button class="movie-card__btn movie-card__btn--details" data-action="details">
+                        Details
+                    </button>
                 </div>
             </div>
-            <p class="movie-card__place" >0${index + 1}</p>
+            <p class="movie-card__place">0${index + 1}</p>
         </article>
     `;
 }

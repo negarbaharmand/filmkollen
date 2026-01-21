@@ -135,13 +135,20 @@ main {
     margin-top: auto;
 }
 
-#addToWatched {
+.movie-card__btn {
     background-color: transparent;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
-#addToWatchlist {
+.movie-card__btn--circle {
     height: 2rem;
     width: 2rem;
     background-color: var(--color-primary);
@@ -149,6 +156,11 @@ main {
     border: none;
     font-size: 1.5rem;
     flex-shrink: 0;
+    justify-content: center;
+}
+
+.movie-card__btn--details {
+    background-color: rgba(255, 255, 255, 0.06);
 }
 
 .movie-card__poster img {
@@ -170,6 +182,100 @@ main {
     justify-content: center;
     justify-items: center;
     gap: 1rem;
+}
+
+/* ===== Movie Details Modal ===== */
+
+.movie-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.movie-modal {
+    background-color: #000;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    max-width: 700px;
+    width: 90%;
+    color: var(--color-text);
+    position: relative;
+}
+
+.movie-modal__content {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.movie-modal__poster img,
+.movie-modal__poster .poster-placeholder {
+    width: 180px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+}
+
+.movie-modal__info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.movie-modal__title {
+    margin: 0 0 0.5rem 0;
+}
+
+.movie-modal__rating,
+.movie-modal__meta {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.movie-modal__meta {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.movie-modal__overview {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-height: 8rem;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.movie-modal__actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.movie-modal__btn {
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.movie-modal__btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.movie-modal__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 @media (min-width: 600px) {
