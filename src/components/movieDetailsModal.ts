@@ -1,6 +1,6 @@
 import { getPosterUrl } from "../services/tmdbApi";
 import type { TMDBMovie } from "../types/movie";
-import { toggleWatchlist, toggleWatched } from "../services/movieApi";
+import { toggleWatchlist, toggleWatched } from "../lib/store";
 
 let modalRoot: HTMLDivElement | null = null;
 
