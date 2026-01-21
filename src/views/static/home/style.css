@@ -25,6 +25,34 @@ main {
     backdrop-filter: blur(10px);
 }
 
+.browse__hint {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-primary-light);
+    opacity: 0.85;
+    margin-bottom: 0.25rem;
+}
+
+.browse__hint-text {
+    white-space: nowrap;
+}
+
+.browse__hint-arrow {
+    display: inline-block;
+    animation: browse-swipe-pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes browse-swipe-pulse {
+    0% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(4px); opacity: 1; }
+    100% { transform: translateX(0); opacity: 0.5; }
+}
+
 .browse__search {
     display: flex;
     justify-content: center;

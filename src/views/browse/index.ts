@@ -51,6 +51,10 @@ export default function browse(): HTMLElement {
 
     root.innerHTML = `
         <section class="browse__section browse__section--top">
+            <div class="browse__hint" aria-hidden="true">
+                <span class="browse__hint-text">Swipe to see more</span>
+                <span class="browse__hint-arrow">⟶</span>
+            </div>
             <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
 
