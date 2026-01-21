@@ -4,13 +4,15 @@ export function renderSearch(
     onSearch: (value: string) => void | Promise<void>
 ): void {
     root.innerHTML = `
-        <input 
-            type="search" 
-            id="movie-search" 
-            placeholder="Search movies..." 
-            aria-label="Search movies"
-        />
-        <i class="fa-solid fa-search fa-xl" ></i>
+        <div class="search-field">
+            <input 
+                type="search" 
+                id="movie-search" 
+                placeholder="Search movies..." 
+                aria-label="Search movies"
+            />
+            <i class="fa-solid fa-search fa-xl search-field__icon"></i>
+        </div>
     `;
 
     const input = root.querySelector<HTMLInputElement>("#movie-search")!;

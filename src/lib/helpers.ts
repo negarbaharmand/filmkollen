@@ -29,16 +29,27 @@ export function setupNavHighlighting() {
 }
 
 export function attachDescriptionState() {
-    const top5MovieCards = document.querySelectorAll(".movie-card")
-    top5MovieCards?.forEach(movieCard => {
-        const poster = movieCard.querySelector(".movie-card__poster")
-        poster?.addEventListener("click", () => {
-            movieCard.classList.toggle("show-description")
-            if (movieCard.classList.contains("show-description")) {
-                const rest = Array.from(top5MovieCards).filter(movie => movie !== movieCard);
-                rest.forEach(card => card.classList.remove("show-description"));            
-            }
-        })
-    })
+  const movieCards = document.querySelectorAll(".movie-card");
+
+  if (!movieCards.length) return;
+
+  movieCards.forEach((movieCard) => {
+    const poster = movieCard.querySelector<HTMLElement>(".movie-card__poster");
+    if (!poster) return;
+
+    // Show description on hover
+    movieCard.addEventListener("mouseenter", () => {
+      movieCard.classList.add("show-description");
+
+      // Hide description for all other cards
+      const others = Array.from(movieCards).filter((card) => card !== movieCard);
+      others.forEach((card) => card.classList.remove("show-description"));
+    });
+
+    // Hide description when leaving the card
+    movieCard.addEventListener("mouseleave", () => {
+      movieCard.classList.remove("show-description");
+    });
+  });
 }
 
