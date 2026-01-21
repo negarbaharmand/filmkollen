@@ -5,7 +5,7 @@ import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
 import { attachDescriptionState } from "../../lib/helpers";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
-import { toggleWatchlist, toggleWatched } from "../../lib/store"; // ADD THIS LINE
+import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
 
 function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
   const cards = root.querySelectorAll<HTMLElement>(".movie-card");

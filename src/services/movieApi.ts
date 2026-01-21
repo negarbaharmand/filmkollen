@@ -12,6 +12,7 @@ export async function getAllMovies(): Promise<Movie[]> {
 }
 
 // Get movies by status (watchlist or watched)
+//Here we transform the raw data from ExpressMovie to our Movie type. Expressmovie is the format we get from our backend.
 export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promise<WatchlistResponse> {
     const res = await fetch(`${API_BASE_URL}/movies?status=${status}`);
     if (!res.ok) throw new Error(`Failed to fetch ${status} movies: ${res.status}`);

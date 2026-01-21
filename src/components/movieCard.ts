@@ -1,6 +1,6 @@
 import type { Movie } from "../types/movie";
 import store from "../lib/store";
-
+//function to render movie card for movies from our database
 export function MovieCard(movie: Movie): string {
     const posterUrl = movie.poster || 'https://via.placeholder.com/500x750?text=No+Poster';
     const addedDate = new Date(movie.addedDate).toLocaleDateString('en-US', {
@@ -12,7 +12,7 @@ export function MovieCard(movie: Movie): string {
     // Check current status
     const isInWatchlist = store.isInWatchlist(movie.tmdb_id);
     const isWatched = store.isWatched(movie.tmdb_id);
-
+// Render movie card HTML
     return `
         <article class="movie-card" data-movie-id="${movie.tmdb_id}">
             <div class="movie-card__poster">

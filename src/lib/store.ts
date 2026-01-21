@@ -31,7 +31,7 @@ class Store {
   }
 
   // ========== POPULAR MOVIES ==========
-  
+  //Here we load popular movies from TMDB API
   async loadPopularMovies() {
     try {
       this.popularMovies = await getPopularMovies(1);
@@ -44,7 +44,7 @@ class Store {
   }
 
   // ========== DATABASE MOVIES ==========
-  
+  // Load watchlist and watched movies from database
   async loadDatabaseMovies() {
     try {
       const allMovies = await getAllMovies();
@@ -56,7 +56,7 @@ class Store {
   }
 
   // ========== STATUS CHECKS ==========
-  
+  // Check if a movie is in watchlist or watched by tmdb_id
   isInWatchlist(tmdbId: number): boolean {
     return this.watchlistMovies.some(movie => movie.tmdb_id === tmdbId);
   }
@@ -81,7 +81,7 @@ class Store {
           tmdb_id: movie.id,
           title: movie.title,
           poster_path: movie.poster || '',
-          release_date: movie.releaseYear as any, // Ignore type error for now
+          release_date: movie.releaseYear as any, 
           vote_average: Number(movie.rating) ?? 0,
           overview: movie.overview || '',
           status: 'watchlist'
@@ -121,7 +121,7 @@ class Store {
           tmdb_id: movie.id,
           title: movie.title,
           poster_path: movie.poster || '',
-          release_date: movie.releaseYear as any, // Ignore type error for now
+          release_date: movie.releaseYear as any, 
           vote_average: Number(movie.rating) ?? 0,
           overview: movie.overview || '',
           status: 'watched'
@@ -139,7 +139,7 @@ class Store {
 
 const store = new Store();
 
-// Export bound methods
+// Export bound methods for easy use
 export const loadPopularMovies = store.loadPopularMovies.bind(store);
 export const loadDatabaseMovies = store.loadDatabaseMovies.bind(store);
 export const setRenderCallback = store.setRenderCallback.bind(store);

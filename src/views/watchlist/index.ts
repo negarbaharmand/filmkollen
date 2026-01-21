@@ -58,7 +58,7 @@ function attachCardInteractions(container: HTMLElement, movies: Movie[]): void {
         const movie = movies[index];
         if (!movie) return;
 
-        // Convert to TMDBMovie for toggle functions
+        // Convert to TMDBMovie for toggle functions. TMDBMovie is the format our store functions expect.
         const tmdbMovie = convertToTMDBMovie(movie);
 
         // Watchlist button

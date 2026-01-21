@@ -1,14 +1,14 @@
 import { getPosterUrl } from "../services/tmdbApi";
 import type { TMDBMovie } from "../types/movie";
 import store from "../lib/store";
-
+// Function to render movie card for TMDB movies
 export function movieCard(m: TMDBMovie, index: number): string {
   const poster = getPosterUrl(m.poster);
   
   // Check current status
   const isInWatchlist = store.isInWatchlist(m.id);
   const isWatched = store.isWatched(m.id);
-
+// Render movie card HTML
   return `
         <article class="movie-card" data-tmdb-id="${m.id}">
             <div class="movie-card__poster">
