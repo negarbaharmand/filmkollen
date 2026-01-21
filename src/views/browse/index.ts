@@ -27,8 +27,11 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
 }
 
 function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMovie[]) {
-  const top5 = movies.slice(0, 5);
-  const rest = movies.slice(5);
+  // Filter out movies without a poster so we only render titles that have artwork
+  const moviesWithPoster = movies.filter((movie) => movie.poster);
+
+  const top5 = moviesWithPoster.slice(0, 5);
+  const rest = moviesWithPoster.slice(5);
 
   topRoot.innerHTML =
     top5.length > 0
@@ -98,12 +101,23 @@ export default function browse(): HTMLElement {
             return;
         }
 
-        topRoot.innerHTML = "Searching...";
-        restRoot.innerHTML = "";
+        // Keep the popular "Top 5" intact and only update the "more movies" list
+        restRoot.innerHTML = "Searching...";
 
         try {
             const results = await searchMovies(q, 1);
-            renderSplit(topRoot, restRoot, results);
+            // Only show results that have a poster, and render them in the "more movies" list
+            const resultsWithPoster = results.filter((movie) => movie.poster);
+
+            if (resultsWithPoster.length === 0) {
+              restRoot.innerHTML = '<p class="empty-state">No movies found</p>';
+              return;
+            }
+
+            restRoot.innerHTML = resultsWithPoster.map(movieCard).join("");
+
+            attachDescriptionState();
+            attachCardInteractions(restRoot, resultsWithPoster);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to search movies";
             renderError(topRoot, `Error: ${errorMessage}`);
