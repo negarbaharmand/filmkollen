@@ -4,12 +4,29 @@ import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
 import { attachDescriptionState } from "../../lib/helpers";
+//import { addMovie } from "../../services/movieApi";
 
 
+//commented code is used to quickly add items to watched list for easier testing, to be deleted later on
 
 function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMovie[]) {
     const top5 = movies.slice(0, 5);
     const rest = movies.slice(5);
+
+    
+
+    // addMovie(movies[0], "watched")
+    // addMovie(movies[1], "watched")
+    // addMovie(movies[2], "watched")
+    // addMovie(movies[3], "watched")
+    // addMovie(movies[4], "watched")
+    // addMovie(movies[5], "watched")
+    // addMovie(movies[6], "watched")
+    // addMovie(movies[7], "watched")
+    // addMovie(movies[8], "watched")
+    // addMovie(movies[9], "watched")
+    // addMovie(movies[10], "watched")
+
 
     topRoot.innerHTML = top5.length > 0 
         ? top5.map(movieCard).join("")
