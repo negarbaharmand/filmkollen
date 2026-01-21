@@ -67,14 +67,28 @@ main {
       transform 0.3s ease;
 }
 
-
 .movie-card.show-description .movie-card__details {
     width: 15rem;
     opacity: 1;
     transform: translateX(0);
     max-width: 15rem;
     padding: 1rem;
+}
 
+/* Grid cards (More section): overlay on top of the card */
+#rest .movie-card__details {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    max-width: none;
+    background-color: rgba(0, 0, 0, 0.96);
+    transform: translateY(8px);
+}
+
+#rest .movie-card.show-description .movie-card__details {
+    width: auto;
+    max-width: none;
+    transform: translateY(0);
 }
 
 
