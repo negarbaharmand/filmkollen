@@ -155,11 +155,11 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
         if (actionsContainer) {
             // Replace default buttons with watched-specific actions
             actionsContainer.innerHTML = `
-                <button class="favorite-btn" data-movie-id="${movie.id}">
-                    ${movie.is_favorite ? '★ Favorite' : '☆ Favorite'}
+                <button class="favorite-btn" data-movie-id="${movie.id}" title="${movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
+                    ${movie.is_favorite ? '★' : '☆'}
                 </button>
-                <button class="rate-btn" data-movie-id="${movie.id}">Rate</button>
-                <button class="remove-btn" data-movie-id="${movie.id}">Remove</button>
+                <button class="rate-btn" data-movie-id="${movie.id}" title="Rate this movie">⭐</button>
+                <button class="remove-btn" data-movie-id="${movie.id}" title="Remove from watched">✕</button>
             `;
         } else {
             // If actions container doesn't exist, create one
@@ -168,11 +168,11 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
                 const actionsDiv = document.createElement("div");
                 actionsDiv.className = "movie-card__actions";
                 actionsDiv.innerHTML = `
-                    <button class="favorite-btn" data-movie-id="${movie.id}">
-                        ${movie.is_favorite ? '★ Favorite' : '☆ Favorite'}
+                    <button class="favorite-btn" data-movie-id="${movie.id}" title="${movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
+                        ${movie.is_favorite ? '★' : '☆'}
                     </button>
-                    <button class="rate-btn" data-movie-id="${movie.id}">Rate</button>
-                    <button class="remove-btn" data-movie-id="${movie.id}">Remove</button>
+                    <button class="rate-btn" data-movie-id="${movie.id}" title="Rate this movie">⭐</button>
+                    <button class="remove-btn" data-movie-id="${movie.id}" title="Remove from watched">✕</button>
                 `;
                 details.appendChild(actionsDiv);
             }
@@ -196,11 +196,12 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
 // Attach interactive actions to movie card
 function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) {
     // Toggle favorite
-    const favBtn = card.querySelector(".favorite-btn");
+    const favBtn = card.querySelector<HTMLButtonElement>(".favorite-btn");
     favBtn?.addEventListener("click", async () => {
         movie.is_favorite = !movie.is_favorite;
-        if (favBtn) {
-            favBtn.textContent = movie.is_favorite ? '★ Favorite' : '☆ Favorite';
+        if (favBtn && favBtn instanceof HTMLButtonElement) {
+            favBtn.textContent = movie.is_favorite ? '★' : '☆';
+            favBtn.title = movie.is_favorite ? 'Remove from favorites' : 'Add to favorites';
         }
         try {
             await updateMovie(movie.id, { is_favorite: movie.is_favorite });
@@ -208,8 +209,9 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
             console.error("Failed to update favorite:", err);
             // Revert on error
             movie.is_favorite = !movie.is_favorite;
-            if (favBtn) {
-                favBtn.textContent = movie.is_favorite ? '★ Favorite' : '☆ Favorite';
+            if (favBtn && favBtn instanceof HTMLButtonElement) {
+                favBtn.textContent = movie.is_favorite ? '★' : '☆';
+                favBtn.title = movie.is_favorite ? 'Remove from favorites' : 'Add to favorites';
             }
         }
     });
