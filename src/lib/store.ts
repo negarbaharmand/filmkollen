@@ -37,7 +37,7 @@ class Store {
 
   // ========== WATCHLIST ACTIONS ==========
   
-  async toggleWatchlist(movie: TMDBMovie): Promise<void> {
+  async toggleWatchlist(movie: TMDBMovie, shouldRender: boolean = true): Promise<void> {
     try {
       const existing = await findMovieByTmdbId(movie.id);
       
@@ -52,7 +52,9 @@ class Store {
       }
       // If watched, do nothing
       
-      this.triggerRender();
+      if (shouldRender) {
+        this.triggerRender();
+      }
     } catch (error) {
       console.error("Failed to toggle watchlist:", error);
       throw error;
@@ -61,7 +63,7 @@ class Store {
 
   // ========== WATCHED ACTIONS ==========
   
-  async toggleWatched(movie: TMDBMovie): Promise<void> {
+  async toggleWatched(movie: TMDBMovie, shouldRender: boolean = true): Promise<void> {
     try {
       const existing = await findMovieByTmdbId(movie.id);
       
@@ -83,7 +85,9 @@ class Store {
         this.watchedMovies.push(savedMovie);
       }
       
-      this.triggerRender();
+      if (shouldRender) {
+        this.triggerRender();
+      }
     } catch (error) {
       console.error("Failed to toggle watched:", error);
       throw error;

@@ -41,7 +41,9 @@ export function watched(): HTMLElement {
                 </select>
             </div>
         </div>
-        <div id="watchedContainer" class="movie-grid"></div>
+        <div id="watchedContainer" class="movie-grid">
+            <p class="loading-state">Loading watched movies...</p>
+        </div>
     `;
 
     const filterEl = root.querySelector("#filter") as HTMLSelectElement;

@@ -32,6 +32,19 @@ body {
   line-height: var(--line-height-base);
   background-color: var(--color-background);
   color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
 .empty-state {
   margin: 4rem auto;

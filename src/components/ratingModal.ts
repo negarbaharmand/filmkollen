@@ -188,7 +188,7 @@ export function openRatingModal(
 function updateStarDisplay(
   starBtns: NodeListOf<HTMLButtonElement>,
   rating: number,
-  isHover: boolean = false
+  _isHover: boolean = false
 ): void {
   starBtns.forEach((btn, index) => {
     const star = btn.querySelector(".star");

@@ -43,6 +43,12 @@ nav ul li a:hover {
   color: var(--color-primary-light);
 }
 
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
 .logo {
   margin: 0;
   font-family: "Abel", Arial, sans-serif;
