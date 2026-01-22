@@ -59,7 +59,6 @@ export async function addMovie(movie: TMDBMovie, status: 'watchlist' | 'watched'
         review: "",
         is_favorite: true,
         date_added: new Date().toISOString()
-        
     };
 
     const res = await fetch(`${API_BASE_URL}/movies`, {
