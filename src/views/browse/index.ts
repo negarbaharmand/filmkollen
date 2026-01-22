@@ -4,7 +4,6 @@ import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 import { MovieCard } from "../../components/movieCard";
 import { attachDescriptionState } from "../../lib/helpers";
-//import { addMovie } from "../../services/movieApi";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
 import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
 

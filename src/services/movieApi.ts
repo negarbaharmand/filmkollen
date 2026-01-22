@@ -1,6 +1,5 @@
 // API-anrop till Movie API
-import type { Movie, TMDBMovie, WatchlistResponse, ExpressMovie, UpdateMovieRequest } from "../types/movie";
-import type { Movie, TMDBMovie, ExpressMovie, ExpressMovieResponse } from "../types/movie";
+import type { Movie, ExpressMovie, ExpressMovieResponse, UpdateMovieRequest } from "../types/movie";
 import { getPosterUrl } from "./tmdbApi";
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -21,14 +20,21 @@ export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promis
     return {
         movies: data.map((raw: ExpressMovie) => ({
             id: raw.id,
+            tmdb_id: raw.tmdb_id,
             poster: getPosterUrl(raw.poster_path),
             title: raw.title,
             releaseYear: raw.release_date
-                ? new Date(raw.release_date).getFullYear()
-                : 0,
-            rating: raw.vote_average,
+                ? new Date(raw.release_date).getFullYear().toString()
+                : "",
+            rating: raw.vote_average?.toString() ?? "0",
+            overview: raw.overview ?? "",
+            status: raw.status,
+            personal_rating: raw.personal_rating,
+            review: raw.review,
+            is_favorite: raw.is_favorite,
             addedDate: raw.date_added || new Date().toISOString(),
-            overview: raw.overview
+            date_watched: raw.date_watched,
+            adult: false // ExpressMovie doesn't have adult field, defaulting to false
         })),
         totalCount: data.length,
     };

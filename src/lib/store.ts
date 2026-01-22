@@ -1,19 +1,13 @@
-// Global state: browseMovies, watchlist, watched, selectedMovie, loading, error
+// Global state: watchlist, watched
 import type { TMDBMovie, Movie } from "../types/movie";
-import { getPopularMovies } from "../services/tmdbApi";
-import { getAllMovies, addMovie, updateMovie, deleteMovie, findMovieByTmdbId, getMoviesByStatus } from "../services/movieApi";
+import { addMovie, updateMovie, deleteMovie, findMovieByTmdbId } from "../services/movieApi";
 
 class Store {
   renderCallback: () => void;
 
-  // TMDB API state
-  popularMovies: TMDBMovie[] = [];
-  browseMovies: TMDBMovie[] = [];
-  
   // Database movie state - movies saved in backend
   watchlistMovies: Movie[] = [];
   watchedMovies: Movie[] = [];
-  watchlistCount: number = 0;
 
   constructor() {
     this.renderCallback = () => {};
@@ -28,31 +22,6 @@ class Store {
   triggerRender() {
     if (this.renderCallback) {
       this.renderCallback();
-    }
-  }
-
-  // ========== POPULAR MOVIES ==========
-  //Here we load popular movies from TMDB API
-  async loadPopularMovies() {
-    try {
-      this.popularMovies = await getPopularMovies(1);
-      this.browseMovies = this.popularMovies;
-      this.triggerRender();
-    } catch (error) {
-      console.error("Failed to load popular movies:", error);
-      throw error;
-    }
-  }
-
-  // ========== DATABASE MOVIES ==========
-  // Load watchlist and watched movies from database
-  async loadDatabaseMovies() {
-    try {
-      const allMovies = await getAllMovies();
-      this.watchlistMovies = allMovies.filter(movie => movie.status === 'watchlist');
-      this.watchedMovies = allMovies.filter(movie => movie.status === 'watched');
-    } catch (error) {
-      console.error("Failed to load database movies:", error);
     }
   }
 
@@ -136,40 +105,12 @@ class Store {
       throw error;
     }
   }
-  // ========== WATCHED MOVIES ==========
-
-  async loadWatchedMovies() {
-    try {
-      this.watchedMovies = (await getMoviesByStatus("watched")).movies;
-      this.triggerRender();
-    } catch (error) {
-      console.error("Failed to load watched movies:", error);
-      throw error;
-    }
-  }
-
-  // ========== WATCHLIST MOVIES ==========
-
-  async loadWatchListMovies() {
-    try {
-      ({ movies: this.watchlistMovies, totalCount: this.watchlistCount } = await getMoviesByStatus("watchlist"));
-      this.triggerRender();
-    } catch (error) {
-      console.error("Failed to load watchlist movies:", error);
-      throw error;
-    }
-  }
 }
 
 const store = new Store();
 
 // Export bound methods for easy use
-export const loadPopularMovies = store.loadPopularMovies.bind(store);
-export const loadDatabaseMovies = store.loadDatabaseMovies.bind(store);
-export const loadWatchedMovies = store.loadWatchedMovies.bind(store);
-export const loadWatchListMovies = store.loadWatchListMovies.bind(store);
 export const setRenderCallback = store.setRenderCallback.bind(store);
-export const triggerRender = store.triggerRender.bind(store);
 export const toggleWatchlist = store.toggleWatchlist.bind(store);
 export const toggleWatched = store.toggleWatched.bind(store);
 
