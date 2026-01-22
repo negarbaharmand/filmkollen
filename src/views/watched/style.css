@@ -6,6 +6,80 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.watched-header h1 {
+  margin: 0;
+}
+
+.film-count {
+  color: var(--color-primary-light, #888);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Action buttons for watched movies */
+.movie-card__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: auto;
+  flex-wrap: nowrap;
+}
+
+.favorite-btn,
+.rate-btn,
+.remove-btn {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 2rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.favorite-btn:hover,
+.rate-btn:hover,
+.remove-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.favorite-btn {
+  color: var(--color-primary, #ff6b6b);
+}
+
+.favorite-btn:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.remove-btn {
+  color: #ff4444;
+}
+
+.remove-btn:hover {
+  background-color: rgba(255, 68, 68, 0.1);
+  border-color: rgba(255, 68, 68, 0.3);
 }
 
 .filters {
@@ -19,4 +93,320 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .watched-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .movie-card__actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .favorite-btn,
+  .rate-btn,
+  .remove-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Rating Modal Styles */
+.rating-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.rating-modal {
+  background-color: var(--color-background, rgb(25, 25, 25));
+  border-radius: var(--radius-md, 8px);
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.rating-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text, white);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.rating-modal__close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rating-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rating-modal__title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text, white);
+}
+
+.rating-modal__movie-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.rating-modal__stars {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 2.5rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  color: #ffd700;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+.star-btn.active .star {
+  color: #ffd700;
+}
+
+.star {
+  display: inline-block;
+  transition: color 0.2s ease;
+  color: rgba(255, 215, 0, 0.4);
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-modal__selected-rating {
+  text-align: center;
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 1.5rem;
+}
+
+.rating-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.rating-modal__btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: var(--color-text, white);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.rating-modal__btn:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.rating-modal__btn--save {
+  background-color: var(--color-primary, #CA1818);
+  border-color: var(--color-primary, #CA1818);
+}
+
+.rating-modal__btn--save:hover:not(:disabled) {
+  background-color: #a01414;
+  border-color: #a01414;
+}
+
+.rating-modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .rating-modal {
+    padding: 1.5rem;
+  }
+
+  .rating-modal__stars {
+    gap: 0.25rem;
+  }
+
+  .star-btn {
+    font-size: 2rem;
+  }
+
+  .rating-modal__actions {
+    flex-direction: column;
+  }
+
+  .rating-modal__btn {
+    width: 100%;
+  }
+}
+
+/* Confirmation Modal Styles */
+.confirmation-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.confirmation-modal {
+  background-color: var(--color-background, rgb(25, 25, 25));
+  border-radius: var(--radius-md, 8px);
+  padding: 2rem;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.confirmation-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text, white);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.confirmation-modal__close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.confirmation-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.confirmation-modal__title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text, white);
+}
+
+.confirmation-modal__message {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+}
+
+.confirmation-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.confirmation-modal__btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: var(--color-text, white);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.confirmation-modal__btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.confirmation-modal__btn--confirm {
+  background-color: var(--color-primary, #CA1818);
+  border-color: var(--color-primary, #CA1818);
+}
+
+.confirmation-modal__btn--confirm:hover {
+  background-color: #a01414;
+  border-color: #a01414;
+}
+
+@media (max-width: 600px) {
+  .confirmation-modal {
+    padding: 1.5rem;
+  }
+
+  .confirmation-modal__actions {
+    flex-direction: column;
+  }
+
+  .confirmation-modal__btn {
+    width: 100%;
+  }
 }

@@ -8,7 +8,6 @@ import footerHTML from "./views/static/footer/index.html?raw";
 
 // Dynamic pages
 import browse from "./views/browse/index.ts";
-import about from "./views/about/index.ts";
 import { setupNavHighlighting } from "./lib/helpers.ts";
 import watchlist from "./views/watchlist/index.ts";  
 
@@ -23,8 +22,6 @@ const currentPage = (): string | HTMLElement => {
   switch (path) {
     case "/":
       return browse();
-    case "/about":
-      return about();
     case "/watchlist":  
       return watchlist();
     case "/watched":

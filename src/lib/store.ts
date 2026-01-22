@@ -47,15 +47,7 @@ class Store {
         this.watchlistMovies = this.watchlistMovies.filter(m => m.tmdb_id !== movie.id);
       } else if (!existing) {
         // Add to watchlist (only if not in database)
-        const savedMovie = await addMovie({
-          tmdb_id: movie.id,
-          title: movie.title,
-          poster_path: movie.poster || '',
-          release_date: movie.releaseYear as any, 
-          vote_average: Number(movie.rating) ?? 0,
-          overview: movie.overview || '',
-          status: 'watchlist'
-        });
+        const savedMovie = await addMovie(movie, 'watchlist');
         this.watchlistMovies.push(savedMovie);
       }
       // If watched, do nothing
@@ -87,15 +79,7 @@ class Store {
         this.watchedMovies.push(updated);
       } else {
         // Add as watched
-        const savedMovie = await addMovie({
-          tmdb_id: movie.id,
-          title: movie.title,
-          poster_path: movie.poster || '',
-          release_date: movie.releaseYear as any, 
-          vote_average: Number(movie.rating) ?? 0,
-          overview: movie.overview || '',
-          status: 'watched'
-        });
+        const savedMovie = await addMovie(movie, 'watched');
         this.watchedMovies.push(savedMovie);
       }
       
