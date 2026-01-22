@@ -1,5 +1,5 @@
 // API-anrop till Movie API
-import type { Movie, TMDBMovie, WatchlistResponse, ExpressMovie } from "../types/movie";
+import type { Movie, TMDBMovie, WatchlistResponse, ExpressMovie, UpdateMovieRequest } from "../types/movie";
 import { getPosterUrl } from "./tmdbApi";
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -20,12 +20,19 @@ export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promis
     return {
         movies: data.map((raw: ExpressMovie) => ({
             id: raw.id,
+            tmdb_id: raw.tmdb_id,
             poster: getPosterUrl(raw.poster_path),
             title: raw.title,
             releaseYear: raw.release_date ?? "",
             rating: raw.vote_average?.toString() ?? "",
             addedDate: raw.date_added || new Date().toISOString(),
-            overview: raw.overview
+            overview: raw.overview ?? "",
+            status: raw.status,
+            personal_rating: raw.personal_rating,
+            review: raw.review,
+            is_favorite: raw.is_favorite,
+            date_watched: raw.date_watched,
+            adult: false
         })),
         totalCount: data.length,
     };
@@ -51,7 +58,7 @@ export async function addMovie(movie: TMDBMovie, status: 'watchlist' | 'watched'
         personal_rating: 5.0,
         review: "",
         is_favorite: true,
-        date_added: "not defined"
+        date_added: new Date().toISOString()
         
     };
 
@@ -118,14 +125,8 @@ export async function toggleWatched(movie: TMDBMovie): Promise<Movie | null> {
 // Update a movie in the database
 export async function updateMovie(
   id: number,
-  updates: Partial<{
-    personal_rating: number;
-    review: string;
-    is_favorite: boolean;
-    status: 'watchlist' | 'watched';
-    date_watched: string | null;
-  }>
-): Promise<void> {
+  updates: UpdateMovieRequest
+): Promise<Movie> {
   const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -136,4 +137,6 @@ export async function updateMovie(
     const error = await res.json();
     throw new Error(error.error || `Failed to update movie: ${res.status}`);
   }
+  
+  return await res.json();
 }

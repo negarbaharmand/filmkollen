@@ -30,7 +30,7 @@ export interface Movie {
     status: 'watchlist' | 'watched';
     personal_rating: number | null;
     review: string | null;
-    is_favorite: number;
+    is_favorite: boolean;
     addedDate: string;
     date_watched: string | null;
     adult: boolean,
@@ -63,4 +63,19 @@ export interface ExpressMovie {
 export interface WatchlistResponse {
     movies: Movie[];
     totalCount: number;
+}
+
+// type for response when we fetch movies (alias for consistency)
+export interface ExpressMovieResponse {
+    movies: Movie[];
+    totalCount: number;
+}
+
+// type for updating a movie in the database
+export interface UpdateMovieRequest {
+    status?: 'watchlist' | 'watched';
+    personal_rating?: number | null;
+    review?: string | null;
+    is_favorite?: boolean;
+    date_watched?: string | null;
 }

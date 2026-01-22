@@ -36,7 +36,7 @@ async function loadWatched(root: HTMLElement) {
 
         if (data.movies.length === 0) {
             container.innerHTML = "";
-            container.appendChild(EmptyState("watched list"));
+            container.appendChild(EmptyState("Your watched list is empty. Start watching movies!"));
             filmCount.textContent = `0 Movies`;
             return;
         }
@@ -79,7 +79,7 @@ function renderMovies(container: HTMLElement, movies: Movie[]) {
     container.innerHTML = "";
 
     if (movies.length === 0) {
-        container.appendChild(EmptyState("watched list"));
+        container.appendChild(EmptyState("No movies match your filter."));
         return;
     }
 
@@ -90,7 +90,7 @@ function renderMovies(container: HTMLElement, movies: Movie[]) {
         card.innerHTML = `
             <img src="${movie.poster}" alt="${movie.title}" />
             <h3>${movie.title} (${movie.releaseYear?.slice(0,4) ?? '—'})</h3>
-            <div class="rating">Your rating: ${movie.rating ?? '—'}</div>
+            <div class="rating">Your rating: ${movie.personal_rating ?? '—'}</div>
             <button class="favorite-btn">${movie.is_favorite ? '★ Favorite' : '☆ Favorite'}</button>
             <button class="remove-btn">Remove</button>
             <button class="edit-btn">Edit Rating/Review</button>
@@ -99,23 +99,32 @@ function renderMovies(container: HTMLElement, movies: Movie[]) {
         // Toggle favorite
         const favBtn = card.querySelector(".favorite-btn")!;
         favBtn.addEventListener("click", async () => {
-            movie.is_favorite = movie.is_favorite ? 0 : 1;
+            movie.is_favorite = !movie.is_favorite;
             favBtn.textContent = movie.is_favorite ? '★ Favorite' : '☆ Favorite';
             try {
-                await updateMovie(movie.id, { is_favorite: movie.is_favorite === 1});
+                await updateMovie(movie.id, { is_favorite: movie.is_favorite });
             } catch (err) {
                 console.error("Failed to update favorite:", err);
+                // Revert on error
+                movie.is_favorite = !movie.is_favorite;
+                favBtn.textContent = movie.is_favorite ? '★ Favorite' : '☆ Favorite';
             }
         });
 
         // Remove movie
         const removeBtn = card.querySelector(".remove-btn")!;
         removeBtn.addEventListener("click", async () => {
+            if (!confirm(`Are you sure you want to remove "${movie.title}" from your watched list?`)) {
+                return;
+            }
             try {
                 await deleteMovie(movie.id);
-                container.removeChild(card);
+                card.remove();
+                // Reload the list to update count
+                loadWatched(root);
             } catch (err) {
                 console.error("Failed to remove movie:", err);
+                alert("Failed to remove movie. Please try again.");
             }
         });
 
@@ -125,13 +134,25 @@ function renderMovies(container: HTMLElement, movies: Movie[]) {
             const rating = prompt("Enter your rating (1–5):", movie.personal_rating?.toString() ?? "");
             const review = prompt("Enter your review:", movie.review ?? "");
             if (rating) {
-                movie.personal_rating = Number(rating);
+                const ratingNum = Number(rating);
+                if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+                    alert("Please enter a valid rating between 1 and 5.");
+                    return;
+                }
+                const oldRating = movie.personal_rating;
+                const oldReview = movie.review;
+                movie.personal_rating = ratingNum;
                 movie.review = review ?? "";
                 card.querySelector(".rating")!.textContent = `Your rating: ${movie.personal_rating}`;
                 try {
                     await updateMovie(movie.id, { personal_rating: movie.personal_rating, review: movie.review });
                 } catch (err) {
                     console.error("Failed to update rating/review:", err);
+                    // Revert on error
+                    movie.personal_rating = oldRating;
+                    movie.review = oldReview;
+                    card.querySelector(".rating")!.textContent = `Your rating: ${movie.personal_rating ?? '—'}`;
+                    alert("Failed to update rating/review. Please try again.");
                 }
             }
         });
