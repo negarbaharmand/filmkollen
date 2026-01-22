@@ -6,6 +6,71 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.watched-header h1 {
+  margin: 0;
+}
+
+.film-count {
+  color: var(--color-primary-light, #888);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Action buttons for watched movies */
+.movie-card__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.favorite-btn,
+.edit-btn,
+.remove-btn {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.favorite-btn:hover,
+.edit-btn:hover,
+.remove-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.favorite-btn {
+  color: var(--color-primary, #ff6b6b);
+}
+
+.favorite-btn:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.remove-btn {
+  color: #ff4444;
+}
+
+.remove-btn:hover {
+  background-color: rgba(255, 68, 68, 0.1);
+  border-color: rgba(255, 68, 68, 0.3);
 }
 
 .filters {
@@ -19,4 +84,27 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .watched-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .movie-card__actions {
+    flex-direction: column;
+  }
+
+  .favorite-btn,
+  .edit-btn,
+  .remove-btn {
+    width: 100%;
+  }
 }
