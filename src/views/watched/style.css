@@ -294,3 +294,119 @@
     width: 100%;
   }
 }
+
+/* Confirmation Modal Styles */
+.confirmation-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.confirmation-modal {
+  background-color: var(--color-background, rgb(25, 25, 25));
+  border-radius: var(--radius-md, 8px);
+  padding: 2rem;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.confirmation-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text, white);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.confirmation-modal__close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.confirmation-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.confirmation-modal__title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-text, white);
+}
+
+.confirmation-modal__message {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+}
+
+.confirmation-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.confirmation-modal__btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: var(--color-text, white);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.confirmation-modal__btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.confirmation-modal__btn--confirm {
+  background-color: var(--color-primary, #CA1818);
+  border-color: var(--color-primary, #CA1818);
+}
+
+.confirmation-modal__btn--confirm:hover {
+  background-color: #a01414;
+  border-color: #a01414;
+}
+
+@media (max-width: 600px) {
+  .confirmation-modal {
+    padding: 1.5rem;
+  }
+
+  .confirmation-modal__actions {
+    flex-direction: column;
+  }
+
+  .confirmation-modal__btn {
+    width: 100%;
+  }
+}

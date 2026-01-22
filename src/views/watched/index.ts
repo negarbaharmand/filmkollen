@@ -4,6 +4,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { MovieCard } from '../../components/movieCard';
 import { attachDescriptionState } from '../../lib/helpers';
 import { openRatingModal } from '../../components/ratingModal';
+import { showConfirmationModal } from '../../components/confirmationModal';
 import './style.css';
 
 let allMovies: Movie[] = [];
@@ -240,9 +241,15 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
     // Remove movie
     const removeBtn = card.querySelector(".remove-btn");
     removeBtn?.addEventListener("click", async () => {
-        if (!confirm(`Are you sure you want to remove "${movie.title}" from your watched list?`)) {
+        const confirmed = await showConfirmationModal(
+            `Are you sure you want to remove "${movie.title}" from your watched list?`,
+            "Remove Movie"
+        );
+        
+        if (!confirmed) {
             return;
         }
+        
         try {
             await deleteMovie(movie.id);
             // Remove from local array
@@ -256,7 +263,10 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
             filmCount.textContent = `${allMovies.length} ${allMovies.length === 1 ? 'Movie' : 'Movies'}`;
         } catch (err) {
             console.error("Failed to remove movie:", err);
-            alert("Failed to remove movie. Please try again.");
+            await showConfirmationModal(
+                "Failed to remove movie. Please try again.",
+                "Error"
+            );
         }
     });
 }
