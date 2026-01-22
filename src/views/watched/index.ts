@@ -7,33 +7,35 @@ import type { Movie } from '../../types/movie';
 const container = document.createElement('main');
 let movies: Movie[] = []
 
-const filterMovies = (filter: string) => {
-    console.log("filter movies by", filter)
-    if (filter == "all") {
-        return movies
-    } else if (filter == "is_favorite") {
-        return movies.filter(movie => movie.is_favorite)
-    } else if (filter == "rating_gt_9") {
-        return movies.filter(movie => Number(movie.rating) >= 9)
-    } else if (filter == "rating_gt_7") {
-        return movies.filter(movie => Number(movie.rating) >= 7)
+const filterMovies = (filter: string): Movie[] => {
+    if (filter === "all") {
+        return movies;
+    } else if (filter === "is_favorite") {
+        return movies.filter(movie => movie.is_favorite);
+    } else if (filter === "rating_gt_9") {
+        return movies.filter(movie => Number(movie.rating) >= 9);
+    } else if (filter === "rating_gt_7") {
+        return movies.filter(movie => Number(movie.rating) >= 7);
     }
+    return movies;
 }
 
-const sortMovies = (sortBy: string, movieToSort: Movie[]) => {
-    if (sortBy == "date_added_desc") {
-        return movieToSort.sort((a, b) => {
+const sortMovies = (sortBy: string, movieToSort: Movie[]): Movie[] => {
+    const sorted = [...movieToSort]; // Create a copy to avoid mutating the original array
+    if (sortBy === "date_added_desc") {
+        return sorted.sort((a, b) => {
             return new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime();
-        })
-    } else if (sortBy == "date_added_asc") {
-        return movieToSort.sort((a, b) => {
+        });
+    } else if (sortBy === "date_added_asc") {
+        return sorted.sort((a, b) => {
             return new Date(a.addedDate).getTime() - new Date(b.addedDate).getTime();
-        })
-    } else if (sortBy == "rating_desc") {
-        return movieToSort.sort((a, b) => Number(b.rating) - Number(a.rating))
-    } else if (sortBy == "rating_asc") {
-        return movieToSort.sort((a, b) => Number(a.rating) - Number(b.rating))
+        });
+    } else if (sortBy === "rating_desc") {
+        return sorted.sort((a, b) => Number(b.rating) - Number(a.rating));
+    } else if (sortBy === "rating_asc") {
+        return sorted.sort((a, b) => Number(a.rating) - Number(b.rating));
     }
+    return sorted;
 }
 
 
@@ -112,7 +114,7 @@ function renderMovies(filter?: string, sortBy?: string): void {
     }
 
     // render movie cards
-    moviesContainer.innerHTML = (sortedMovies ?? []).map(MovieCard).join('');
+    moviesContainer.innerHTML = (sortedMovies ?? []).map(movie => MovieCard(movie, { showAddedDate: true })).join('');
 
     attachDescriptionState()
 }

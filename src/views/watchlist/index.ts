@@ -112,7 +112,7 @@ function renderMovies(container: HTMLElement, movies: Movie[], totalCount: numbe
 
     // Render movie cards
     moviesContainer.innerHTML = movies
-        .map(movie => MovieCard(movie))
+        .map(movie => MovieCard(movie, { showAddedDate: true }))
         .join('');
 
     attachDescriptionState();
