@@ -4,4 +4,19 @@
 @import "./views/static/home/style.css";
 @import "./views/watchlist/style.css";
 @import "./views/watched/style.css";
-@import "./views/static/watched.css"
+@import "./views/static/watched.css";
+
+/* Page transition animations */
+main {
+    animation: fadeInPage 0.3s ease-in;
+    min-height: calc(100vh - 200px); /* Prevent footer from jumping up while content loads */
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

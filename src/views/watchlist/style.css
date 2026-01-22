@@ -1,3 +1,25 @@
+.watchlist-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.watchlist-header {
+  flex-shrink: 0;
+}
+
+#watchlistContainer {
+  padding-top: 1rem;
+  padding-bottom: 0.1rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #888;
+  font-size: 1.1rem;
+}
+
 .empty-state {
   text-align: center;
   padding: 4rem 1rem;

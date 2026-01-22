@@ -16,7 +16,9 @@ export default function watchlist(): HTMLElement {
             <h1>My Watchlist</h1>
             <p class="film-count" id="filmCount">Loading...</p>
         </div>
-        <div id="watchlistContainer" class="movie-grid"></div>
+        <div id="watchlistContainer" class="movie-grid">
+            <p class="loading-state">Loading your watchlist...</p>
+        </div>
     `;
 
     // Loading the watchlist
@@ -66,11 +68,12 @@ function attachCardInteractions(container: HTMLElement, movies: Movie[]): void {
             'button[data-action="watchlist"]'
         );
         watchlistBtn?.addEventListener('click', async (event) => {
+            event.preventDefault();
             event.stopPropagation();
             try {
-                await toggleWatchlist(tmdbMovie);
-                // Reload the watchlist after toggle
-                loadWatchlist(container);
+                await toggleWatchlist(tmdbMovie, false); // Don't trigger app re-render
+                // Reload only the watchlist after toggle
+                await loadWatchlist(container);
             } catch (error) {
                 console.error('Failed to toggle watchlist:', error);
             }
@@ -81,11 +84,12 @@ function attachCardInteractions(container: HTMLElement, movies: Movie[]): void {
             'button[data-action="watched"]'
         );
         watchedBtn?.addEventListener('click', async (event) => {
+            event.preventDefault();
             event.stopPropagation();
             try {
-                await toggleWatched(tmdbMovie);
-                // Reload the watchlist after toggle
-                loadWatchlist(container);
+                await toggleWatched(tmdbMovie, false); // Don't trigger app re-render
+                // Reload only the watchlist after toggle
+                await loadWatchlist(container);
             } catch (error) {
                 console.error('Failed to toggle watched:', error);
             }
@@ -96,9 +100,15 @@ function attachCardInteractions(container: HTMLElement, movies: Movie[]): void {
 // Function to render movies in the watchlist
 function renderMovies(container: HTMLElement, movies: Movie[], totalCount: number): void {
     const filmCount = container.querySelector('#filmCount');
-    const moviesContainer = container.querySelector('#watchlistContainer');
+    const moviesContainer = container.querySelector<HTMLElement>('#watchlistContainer');
 
     if (!filmCount || !moviesContainer) return;
+
+    // Preserve current height to prevent layout shift
+    const currentHeight = moviesContainer.offsetHeight;
+    if (currentHeight > 0) {
+        moviesContainer.style.minHeight = `${currentHeight}px`;
+    }
 
     // Update film count
     filmCount.textContent = `${totalCount} ${totalCount === 1 ? 'Movie' : 'Movies'}`;
@@ -107,6 +117,7 @@ function renderMovies(container: HTMLElement, movies: Movie[], totalCount: numbe
     if (movies.length === 0) {
         moviesContainer.innerHTML = '';
         moviesContainer.appendChild(EmptyState("Your watchlist is empty. Start adding movies!"));
+        moviesContainer.style.minHeight = '';
         return;
     }
 
@@ -115,6 +126,13 @@ function renderMovies(container: HTMLElement, movies: Movie[], totalCount: numbe
         .map(movie => MovieCard(movie, { showAddedDate: true }))
         .join('');
 
+    // Add fade-in animation
+    moviesContainer.classList.add('fade-in');
+    setTimeout(() => moviesContainer.classList.remove('fade-in'), 300);
+
     attachDescriptionState();
     attachCardInteractions(container, movies);
+    
+    // Reset min height after rendering
+    moviesContainer.style.minHeight = '';
 }

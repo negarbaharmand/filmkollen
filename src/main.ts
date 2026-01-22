@@ -35,22 +35,25 @@ const app = document.querySelector("#app")!;
 
 //function to render the app
 const renderApp = () => {
-  const page = currentPage();
-    
-  if(typeof page === "string") {
-    app.innerHTML = `
-          ${headerHTML} 
-          ${page} 
-          ${footerHTML}`;
-  } else {
-    app.innerHTML = 
-    `${headerHTML} 
-     ${footerHTML}`;
+  // Use requestAnimationFrame for smoother rendering
+  requestAnimationFrame(() => {
+    const page = currentPage();
+      
+    if(typeof page === "string") {
+      app.innerHTML = `
+            ${headerHTML} 
+            ${page} 
+            ${footerHTML}`;
+    } else {
+      app.innerHTML = 
+      `${headerHTML} 
+       ${footerHTML}`;
 
-     app.insertBefore(page, app.querySelector("footer")!);
-  }
-  // Re-run nav highlighting after the new DOM exists
-  setupNavHighlighting();
+       app.insertBefore(page, app.querySelector("footer")!);
+    }
+    // Re-run nav highlighting after the new DOM exists
+    setupNavHighlighting();
+  });
 };
 
 //initialise app rendering

@@ -31,11 +31,26 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
       '.movie-card__btn[data-action="watchlist"]'
     );
     watchlistBtn?.addEventListener("click", async (event) => {
+      event.preventDefault();
       event.stopPropagation();
+      
+      const button = event.currentTarget as HTMLButtonElement;
+      const originalText = button.textContent;
+      
       try {
-        await toggleWatchlist(movie);
+        // Optimistically update the button
+        const isCurrentlyInWatchlist = button.textContent?.trim() === '-';
+        button.textContent = isCurrentlyInWatchlist ? '+' : '-';
+        button.disabled = true;
+        
+        await toggleWatchlist(movie, false); // Don't trigger render
+        
+        button.disabled = false;
       } catch (error) {
         console.error("Failed to toggle watchlist:", error);
+        // Revert on error
+        button.textContent = originalText;
+        button.disabled = false;
       }
     });
 
@@ -44,11 +59,28 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
       '.movie-card__btn[data-action="watched"]'
     );
     watchedBtn?.addEventListener("click", async (event) => {
+      event.preventDefault();
       event.stopPropagation();
+      
+      const button = event.currentTarget as HTMLButtonElement;
+      const originalHTML = button.innerHTML;
+      
       try {
-        await toggleWatched(movie);
+        // Optimistically update the button
+        const isCurrentlyWatched = button.innerHTML.includes('Unwatched');
+        button.innerHTML = isCurrentlyWatched 
+          ? '<i class="fa-solid fa-eye fa-xl"></i> Watched'
+          : '<i class="fa-solid fa-eye fa-xl"></i> Unwatched';
+        button.disabled = true;
+        
+        await toggleWatched(movie, false); // Don't trigger render
+        
+        button.disabled = false;
       } catch (error) {
         console.error("Failed to toggle watched:", error);
+        // Revert on error
+        button.innerHTML = originalHTML;
+        button.disabled = false;
       }
     });
   });
@@ -130,6 +162,12 @@ export default function browse(): HTMLElement {
         }
 
         // Keep the popular "Top 5" intact and only update the "more movies" list
+        // Set minimum height to prevent layout shift
+        const currentHeight = restRoot.offsetHeight;
+        if (currentHeight > 0) {
+            restRoot.style.minHeight = `${currentHeight}px`;
+        }
+        
         restRoot.innerHTML = "Searching...";
 
         try {
@@ -139,17 +177,28 @@ export default function browse(): HTMLElement {
 
             if (resultsWithPoster.length === 0) {
               restRoot.innerHTML = '<p class="empty-state">No movies found</p>';
+              // Reset min height after rendering
+              restRoot.style.minHeight = '';
               return;
             }
 
             restRoot.innerHTML = resultsWithPoster.map((movie, index) => MovieCard(movie, { showDetailsButton: true, position: index })).join("");
+            
+            // Add fade-in animation
+            restRoot.classList.add('fade-in');
+            setTimeout(() => restRoot.classList.remove('fade-in'), 300);
 
             attachDescriptionState();
             attachCardInteractions(restRoot, resultsWithPoster);
+            
+            // Reset min height after rendering
+            restRoot.style.minHeight = '';
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to search movies";
             renderError(topRoot, `Error: ${errorMessage}`);
             restRoot.innerHTML = "";
+            // Reset min height
+            restRoot.style.minHeight = '';
         }
     });
 
