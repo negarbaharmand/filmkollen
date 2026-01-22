@@ -3,6 +3,7 @@ import type { Movie } from "../../types/movie";
 import { EmptyState } from '../../components/EmptyState';
 import { MovieCard } from '../../components/movieCard';
 import { attachDescriptionState } from '../../lib/helpers';
+import { openRatingModal } from '../../components/ratingModal';
 import './style.css';
 
 let allMovies: Movie[] = [];
@@ -157,7 +158,7 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
                 <button class="favorite-btn" data-movie-id="${movie.id}">
                     ${movie.is_favorite ? '★ Favorite' : '☆ Favorite'}
                 </button>
-                <button class="edit-btn" data-movie-id="${movie.id}">Edit</button>
+                <button class="rate-btn" data-movie-id="${movie.id}">Rate</button>
                 <button class="remove-btn" data-movie-id="${movie.id}">Remove</button>
             `;
         } else {
@@ -170,7 +171,7 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
                     <button class="favorite-btn" data-movie-id="${movie.id}">
                         ${movie.is_favorite ? '★ Favorite' : '☆ Favorite'}
                     </button>
-                    <button class="edit-btn" data-movie-id="${movie.id}">Edit</button>
+                    <button class="rate-btn" data-movie-id="${movie.id}">Rate</button>
                     <button class="remove-btn" data-movie-id="${movie.id}">Remove</button>
                 `;
                 details.appendChild(actionsDiv);
@@ -213,41 +214,25 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
         }
     });
 
-    // Edit rating/review
-    const editBtn = card.querySelector(".edit-btn");
-    editBtn?.addEventListener("click", async () => {
-        const rating = prompt("Enter your rating (1–5):", movie.personal_rating?.toString() ?? "");
-        const review = prompt("Enter your review:", movie.review ?? "");
-        if (rating) {
-            const ratingNum = Number(rating);
-            if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
-                alert("Please enter a valid rating between 1 and 5.");
-                return;
-            }
-            const oldRating = movie.personal_rating;
-            const oldReview = movie.review;
-            movie.personal_rating = ratingNum;
-            movie.review = review ?? "";
+    // Rate movie
+    const rateBtn = card.querySelector(".rate-btn");
+    rateBtn?.addEventListener("click", () => {
+        openRatingModal(movie, (rating) => {
+            // Update local movie object
+            movie.personal_rating = rating;
             
             // Update display
             const ratingEl = card.querySelector(".movie-card__rating");
             if (ratingEl) {
                 ratingEl.textContent = `⭐ ${movie.rating} | Your rating: ${movie.personal_rating}/5`;
             }
-
-            try {
-                await updateMovie(movie.id, { personal_rating: movie.personal_rating, review: movie.review });
-            } catch (err) {
-                console.error("Failed to update rating/review:", err);
-                // Revert on error
-                movie.personal_rating = oldRating;
-                movie.review = oldReview;
-                if (ratingEl) {
-                    ratingEl.textContent = `⭐ ${movie.rating} | Your rating: ${movie.personal_rating ?? '—'}/5`;
-                }
-                alert("Failed to update rating/review. Please try again.");
+            
+            // Update in allMovies array
+            const movieIndex = allMovies.findIndex(m => m.id === movie.id);
+            if (movieIndex !== -1) {
+                allMovies[movieIndex].personal_rating = rating;
             }
-        }
+        });
     });
 
     // Remove movie
