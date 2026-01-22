@@ -6,6 +6,8 @@ import { attachDescriptionState } from '../../lib/helpers';
 import './style.css';
 
 let allMovies: Movie[] = [];
+let filter: string = "";
+let sortBy: string = "";
 
 export function watched(): HTMLElement {
     const root = document.createElement("main");
@@ -23,8 +25,9 @@ export function watched(): HTMLElement {
                     <option value="favorites">Favorites</option>
                     <option value="5">5⭐</option>
                     <option value="4">4⭐</option>
-                    <option value="rating_gt_9">High rated (9+)</option>
-                    <option value="rating_gt_7">Good rated (7+)</option>
+                    <option value="3">3⭐</option>
+                    <option value="2">2⭐</option>
+                    <option value="1">1⭐</option>
                 </select>
             </div>
             <div class="select-wrapper">
@@ -44,10 +47,12 @@ export function watched(): HTMLElement {
 
     // Event listeners
     filterEl.addEventListener("change", () => {
+        filter = filterEl.value
         renderMovies(root, filterEl.value, sortByEl.value);
     });
 
     sortByEl.addEventListener("change", () => {
+        sortBy = sortByEl.value
         renderMovies(root, filterEl.value, sortByEl.value);
     });
 
@@ -96,10 +101,12 @@ function filterMovies(filter: string): Movie[] {
             return allMovies.filter(m => m.personal_rating === 5);
         case "4":
             return allMovies.filter(m => m.personal_rating === 4);
-        case "rating_gt_9":
-            return allMovies.filter(m => Number(m.rating) >= 9);
-        case "rating_gt_7":
-            return allMovies.filter(m => Number(m.rating) >= 7);
+        case "3":
+            return allMovies.filter(m => m.personal_rating === 3);
+        case "2":
+            return allMovies.filter(m => m.personal_rating === 2);
+        case "1":
+            return allMovies.filter(m => m.personal_rating === 1);
         default:
             return allMovies;
     }
@@ -203,6 +210,7 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
         }
         try {
             await updateMovie(movie.id, { is_favorite: movie.is_favorite });
+            renderMovies(root, filter, sortBy);
         } catch (err) {
             console.error("Failed to update favorite:", err);
             // Revert on error
