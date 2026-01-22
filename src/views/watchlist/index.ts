@@ -13,8 +13,8 @@ export default function watchlist(): HTMLElement {
     // Initial HTML structure
     container.innerHTML = `
         <div class="watchlist-header">
-            <h1>Min Watchlist</h1>
-            <p class="film-count" id="filmCount">Laddar...</p>
+            <h1>My Watchlist</h1>
+            <p class="film-count" id="filmCount">Loading...</p>
         </div>
         <div id="watchlistContainer" class="movie-grid"></div>
     `;

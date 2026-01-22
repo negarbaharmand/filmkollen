@@ -17,6 +17,7 @@ nav ul {
   display: flex;
   list-style: none;
   gap: var(--spacing-md);
+  margin: 0
 }
 
 nav ul li {

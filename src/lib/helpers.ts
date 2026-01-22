@@ -29,6 +29,17 @@ export function setupNavHighlighting() {
 }
 
 export function attachDescriptionState() {
+  const top5MovieCards = document.querySelectorAll(".movie-card")
+  top5MovieCards?.forEach(movieCard => {
+    const poster = movieCard.querySelector(".movie-card__poster")
+    poster?.addEventListener("click", () => {
+      movieCard.classList.toggle("show-description")
+      if (movieCard.classList.contains("show-description")) {
+        const rest = Array.from(top5MovieCards).filter(movie => movie !== movieCard);
+        rest.forEach(card => card.classList.remove("show-description"));            
+      }
+    })
+  })
   const movieCards = document.querySelectorAll(".movie-card");
 
   if (!movieCards.length) return;

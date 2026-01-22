@@ -4,8 +4,12 @@ import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
 import { movieCard } from "../../components/movieCardTMDB";
 import { attachDescriptionState } from "../../lib/helpers";
+//import { addMovie } from "../../services/movieApi";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
 import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
+
+
+//commented code is used to quickly add items to watched list for easier testing, to be deleted later on
 
 function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
   const cards = root.querySelectorAll<HTMLElement>(".movie-card");

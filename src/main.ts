@@ -10,6 +10,7 @@ import browse from "./views/browse/index.ts";
 import about from "./views/about/index.ts";
 import { setupNavHighlighting } from "./lib/helpers.ts";
 import watchlist from "./views/watchlist/index.ts";  
+import watched from "./views/watched/index.ts";  
 
 
 
@@ -26,6 +27,8 @@ const currentPage = (): string | HTMLElement => {
       return about();
     case "/watchlist":  
       return watchlist();
+    case "/watched":
+      return watched()
     default:
       return "404";
   }

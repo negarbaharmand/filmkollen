@@ -1,5 +1,6 @@
 // API-anrop till Movie API
 import type { Movie, TMDBMovie, WatchlistResponse, ExpressMovie, UpdateMovieRequest } from "../types/movie";
+import type { Movie, TMDBMovie, ExpressMovie, ExpressMovieResponse } from "../types/movie";
 import { getPosterUrl } from "./tmdbApi";
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -12,8 +13,7 @@ export async function getAllMovies(): Promise<Movie[]> {
 }
 
 // Get movies by status (watchlist or watched)
-//Here we transform the raw data from ExpressMovie to our Movie type. Expressmovie is the format we get from our backend.
-export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promise<WatchlistResponse> {
+export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promise<ExpressMovieResponse> {
     const res = await fetch(`${API_BASE_URL}/movies?status=${status}`);
     if (!res.ok) throw new Error(`Failed to fetch ${status} movies: ${res.status}`);
     const data = await res.json();
