@@ -1,0 +1,43 @@
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.select-wrapper select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.7rem;  
+    margin: 0.3rem;
+    background-color: black;
+    color: white;
+    border-radius: 5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;   
+    appearance: none; 
+    min-width: 10rem
+}
+
+
+.select-wrapper::after {
+    content: "▼";
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: white;
+}
+
+
+@media (min-width: 600px) {
+    .select-wrapper select {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .select-wrapper::after {
+        right: 2rem;
+    }
+}
+
