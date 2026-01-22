@@ -2,23 +2,74 @@
 import type { TMDBMovie } from "../../types/movie";
 import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
-import { movieCard } from "../../components/movieCardTMDB";
+import { MovieCard } from "../../components/movieCard";
 import { attachDescriptionState } from "../../lib/helpers";
+import { openMovieDetailsModal } from "../../components/movieDetailsModal";
+import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
 
 
+//commented code is used to quickly add items to watched list for easier testing, to be deleted later on
+
+function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
+  const cards = root.querySelectorAll<HTMLElement>(".movie-card");
+
+  cards.forEach((card, index) => {
+    const movie = movies[index];
+    if (!movie) return;
+
+    // Details button
+    const detailsBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="details"]'
+    );
+    detailsBtn?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      openMovieDetailsModal(movie);
+    });
+
+    // Watchlist button
+    const watchlistBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="watchlist"]'
+    );
+    watchlistBtn?.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      try {
+        await toggleWatchlist(movie);
+      } catch (error) {
+        console.error("Failed to toggle watchlist:", error);
+      }
+    });
+
+    // Watched button
+    const watchedBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="watched"]'
+    );
+    watchedBtn?.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      try {
+        await toggleWatched(movie);
+      } catch (error) {
+        console.error("Failed to toggle watched:", error);
+      }
+    });
+  });
+}
 
 function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMovie[]) {
-    const top5 = movies.slice(0, 5);
-    const rest = movies.slice(5);
+  // Filter out movies without a poster so we only render titles that have artwork
+  const moviesWithPoster = movies.filter((movie) => movie.poster);
 
-    topRoot.innerHTML = top5.length > 0 
-        ? top5.map(movieCard).join("")
-        : '<p class="empty-state">No movies found</p>';
-    restRoot.innerHTML = rest.length > 0 
-        ? rest.map(movieCard).join("") 
-        : "";
+  const top5 = moviesWithPoster.slice(0, 5);
+  const rest = moviesWithPoster.slice(5);
 
-    attachDescriptionState()
+  topRoot.innerHTML =
+    top5.length > 0
+      ? top5.map((movie, index) => MovieCard(movie, { showDetailsButton: true, showPosition: true, position: index })).join("")
+      : '<p class="empty-state">No movies found</p>';
+  restRoot.innerHTML = rest.length > 0 ? rest.map((movie, index) => MovieCard(movie, { showDetailsButton: true, position: index + 5 })).join("") : "";
+
+  attachDescriptionState();
+  attachCardInteractions(topRoot, top5);
+  attachCardInteractions(restRoot, rest);
 }
 
 function renderError(root: HTMLElement, message: string) {
@@ -30,19 +81,21 @@ export default function browse(): HTMLElement {
     root.className = "browse";
 
     root.innerHTML = `
-
-        <section class="browse__section">
-            <h2>Top 5</h2>
+        <section class="browse__section browse__section--top">
+            <div class="browse__hint" aria-hidden="true">
+                <span class="browse__hint-text">Swipe to see more</span>
+                <span class="browse__hint-arrow">⟶</span>
+            </div>
             <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
 
-        <section class="browse__search">
-            <div id="search-root"></div>
+        <section class="browse__section browse__section--search">
+            <div class="browse__search">
+                <div id="search-root"></div>
+            </div>
         </section>
 
-
         <section class="browse__section">
-            <h2>More</h2>
             <div id="rest" class="movie-grid" aria-live="polite"></div>
         </section>
     `;
@@ -76,12 +129,23 @@ export default function browse(): HTMLElement {
             return;
         }
 
-        topRoot.innerHTML = "Searching...";
-        restRoot.innerHTML = "";
+        // Keep the popular "Top 5" intact and only update the "more movies" list
+        restRoot.innerHTML = "Searching...";
 
         try {
             const results = await searchMovies(q, 1);
-            renderSplit(topRoot, restRoot, results);
+            // Only show results that have a poster, and render them in the "more movies" list
+            const resultsWithPoster = results.filter((movie) => movie.poster);
+
+            if (resultsWithPoster.length === 0) {
+              restRoot.innerHTML = '<p class="empty-state">No movies found</p>';
+              return;
+            }
+
+            restRoot.innerHTML = resultsWithPoster.map((movie, index) => MovieCard(movie, { showDetailsButton: true, position: index })).join("");
+
+            attachDescriptionState();
+            attachCardInteractions(restRoot, resultsWithPoster);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Failed to search movies";
             renderError(topRoot, `Error: ${errorMessage}`);

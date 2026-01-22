@@ -1,4 +1,3 @@
-
 // Raw API response types (snake_case from TMDB API)
 export type TMDBListResponse<T> = {
     page: number;

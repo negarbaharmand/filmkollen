@@ -1,5 +1,5 @@
 // API-anrop till Movie API
-import type { Movie, TMDBMovie, WatchlistResponse, ExpressMovie, UpdateMovieRequest } from "../types/movie";
+import type { Movie, TMDBMovie, ExpressMovie, ExpressMovieResponse, UpdateMovieRequest } from "../types/movie";
 import { getPosterUrl } from "./tmdbApi";
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -12,7 +12,7 @@ export async function getAllMovies(): Promise<Movie[]> {
 }
 
 // Get movies by status (watchlist or watched)
-export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promise<WatchlistResponse> {
+export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promise<ExpressMovieResponse> {
     const res = await fetch(`${API_BASE_URL}/movies?status=${status}`);
     if (!res.ok) throw new Error(`Failed to fetch ${status} movies: ${res.status}`);
     const data = await res.json();
@@ -23,16 +23,18 @@ export async function getMoviesByStatus(status: 'watchlist' | 'watched'): Promis
             tmdb_id: raw.tmdb_id,
             poster: getPosterUrl(raw.poster_path),
             title: raw.title,
-            releaseYear: raw.release_date ?? "",
-            rating: raw.vote_average?.toString() ?? "",
-            addedDate: raw.date_added || new Date().toISOString(),
+            releaseYear: raw.release_date
+                ? new Date(raw.release_date).getFullYear().toString()
+                : "",
+            rating: raw.vote_average?.toString() ?? "0",
             overview: raw.overview ?? "",
             status: raw.status,
             personal_rating: raw.personal_rating,
             review: raw.review,
             is_favorite: raw.is_favorite,
+            addedDate: raw.date_added || new Date().toISOString(),
             date_watched: raw.date_watched,
-            adult: false
+            adult: false // ExpressMovie doesn't have adult field, defaulting to false
         })),
         totalCount: data.length,
     };
@@ -75,6 +77,25 @@ export async function addMovie(movie: TMDBMovie, status: 'watchlist' | 'watched'
     return await res.json();
 }
 
+// Update existing movie in database
+export async function updateMovie(
+    id: number,
+    updates: UpdateMovieRequest
+): Promise<Movie> {
+    const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || `Failed to update movie: ${res.status}`);
+    }
+
+    return await res.json();
+}
+
 // Delete movie from database
 export async function deleteMovie(id: number): Promise<void> {
     const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
@@ -83,7 +104,6 @@ export async function deleteMovie(id: number): Promise<void> {
 
     if (!res.ok) throw new Error(`Failed to delete movie: ${res.status}`);
 }
-
 
 // Toggles between adding and removing movie from watchlist -Ella
 export async function toggleWatchlist(movie: TMDBMovie): Promise<Movie | null> {
@@ -102,7 +122,6 @@ export async function toggleWatchlist(movie: TMDBMovie): Promise<Movie | null> {
     }
 }
 
-
 // Toggles between marking movie as watched and removing from watched -Ella
 export async function toggleWatched(movie: TMDBMovie): Promise<Movie | null> {
     const existing = await findMovieByTmdbId(movie.id);
@@ -119,23 +138,4 @@ export async function toggleWatched(movie: TMDBMovie): Promise<Movie | null> {
         // Add as watched
         return await addMovie(movie, 'watched');
     }
-}
-
-// Update a movie in the database
-export async function updateMovie(
-  id: number,
-  updates: UpdateMovieRequest
-): Promise<Movie> {
-  const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updates),
-  });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || `Failed to update movie: ${res.status}`);
-  }
-  
-  return await res.json();
 }
