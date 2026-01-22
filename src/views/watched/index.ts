@@ -157,7 +157,7 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
             // Replace default buttons with watched-specific actions
             actionsContainer.innerHTML = `
                 <button class="favorite-btn" data-movie-id="${movie.id}" title="${movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
-                    ${movie.is_favorite ? '★' : '☆'}
+                    ${movie.is_favorite ? '❤️' : '🤍'}
                 </button>
                 <button class="rate-btn" data-movie-id="${movie.id}" title="Rate this movie">⭐</button>
                 <button class="remove-btn" data-movie-id="${movie.id}" title="Remove from watched">✕</button>
@@ -170,7 +170,7 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
                 actionsDiv.className = "movie-card__actions";
                 actionsDiv.innerHTML = `
                     <button class="favorite-btn" data-movie-id="${movie.id}" title="${movie.is_favorite ? 'Remove from favorites' : 'Add to favorites'}">
-                        ${movie.is_favorite ? '★' : '☆'}
+                        ${movie.is_favorite ? '❤️' : '🤍'}
                     </button>
                     <button class="rate-btn" data-movie-id="${movie.id}" title="Rate this movie">⭐</button>
                     <button class="remove-btn" data-movie-id="${movie.id}" title="Remove from watched">✕</button>
@@ -201,7 +201,7 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
     favBtn?.addEventListener("click", async () => {
         movie.is_favorite = !movie.is_favorite;
         if (favBtn && favBtn instanceof HTMLButtonElement) {
-            favBtn.textContent = movie.is_favorite ? '★' : '☆';
+            favBtn.textContent = movie.is_favorite ? '❤️' : '🤍';
             favBtn.title = movie.is_favorite ? 'Remove from favorites' : 'Add to favorites';
         }
         try {
@@ -211,7 +211,7 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
             // Revert on error
             movie.is_favorite = !movie.is_favorite;
             if (favBtn && favBtn instanceof HTMLButtonElement) {
-                favBtn.textContent = movie.is_favorite ? '★' : '☆';
+                favBtn.textContent = movie.is_favorite ? '❤️' : '🤍';
                 favBtn.title = movie.is_favorite ? 'Remove from favorites' : 'Add to favorites';
             }
         }
