@@ -112,7 +112,7 @@ function renderMovies(filter?: string, sortBy?: string): void {
     }
 
     // render movie cards
-    moviesContainer.innerHTML = (sortedMovies ?? []).map(MovieCard).join('');
+    moviesContainer.innerHTML = (sortedMovies ?? []).map(movie => MovieCard(movie, { showAddedDate: true })).join('');
 
     attachDescriptionState()
 }

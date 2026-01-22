@@ -2,7 +2,7 @@
 import type { TMDBMovie } from "../../types/movie";
 import { getPopularMovies, searchMovies } from "../../services/tmdbApi";
 import { renderSearch } from "../../components/ search";
-import { movieCard } from "../../components/movieCardTMDB";
+import { MovieCard } from "../../components/movieCard";
 import { attachDescriptionState } from "../../lib/helpers";
 //import { addMovie } from "../../services/movieApi";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
@@ -64,9 +64,9 @@ function renderSplit(topRoot: HTMLElement, restRoot: HTMLElement, movies: TMDBMo
 
   topRoot.innerHTML =
     top5.length > 0
-      ? top5.map(movieCard).join("")
+      ? top5.map((movie, index) => MovieCard(movie, { showDetailsButton: true, showPosition: true, position: index })).join("")
       : '<p class="empty-state">No movies found</p>';
-  restRoot.innerHTML = rest.length > 0 ? rest.map(movieCard).join("") : "";
+  restRoot.innerHTML = rest.length > 0 ? rest.map((movie, index) => MovieCard(movie, { showDetailsButton: true, position: index + 5 })).join("") : "";
 
   attachDescriptionState();
   attachCardInteractions(topRoot, top5);
@@ -143,7 +143,7 @@ export default function browse(): HTMLElement {
               return;
             }
 
-            restRoot.innerHTML = resultsWithPoster.map(movieCard).join("");
+            restRoot.innerHTML = resultsWithPoster.map((movie, index) => MovieCard(movie, { showDetailsButton: true, position: index })).join("");
 
             attachDescriptionState();
             attachCardInteractions(restRoot, resultsWithPoster);
