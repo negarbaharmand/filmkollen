@@ -6,6 +6,7 @@ import { movieCard } from "../../components/movieCardTMDB";
 import { attachDescriptionState } from "../../lib/helpers";
 //import { addMovie } from "../../services/movieApi";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
+import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
 
 
 //commented code is used to quickly add items to watched list for easier testing, to be deleted later on
@@ -17,13 +18,39 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
     const movie = movies[index];
     if (!movie) return;
 
+    // Details button
     const detailsBtn = card.querySelector<HTMLButtonElement>(
       '.movie-card__btn[data-action="details"]'
     );
-
     detailsBtn?.addEventListener("click", (event) => {
       event.stopPropagation();
       openMovieDetailsModal(movie);
+    });
+
+    // Watchlist button
+    const watchlistBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="watchlist"]'
+    );
+    watchlistBtn?.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      try {
+        await toggleWatchlist(movie);
+      } catch (error) {
+        console.error("Failed to toggle watchlist:", error);
+      }
+    });
+
+    // Watched button
+    const watchedBtn = card.querySelector<HTMLButtonElement>(
+      '.movie-card__btn[data-action="watched"]'
+    );
+    watchedBtn?.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      try {
+        await toggleWatched(movie);
+      } catch (error) {
+        console.error("Failed to toggle watched:", error);
+      }
     });
   });
 }

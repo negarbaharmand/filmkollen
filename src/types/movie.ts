@@ -64,3 +64,11 @@ export interface ExpressMovieResponse {
     movies: Movie[];
     totalCount: number;
 }
+// type for updating a movie in the database
+export interface UpdateMovieRequest {
+    status?: 'watchlist' | 'watched';
+    personal_rating?: number | null;
+    review?: string | null;
+    is_favorite?: boolean;
+    date_watched?: string | null;
+}
