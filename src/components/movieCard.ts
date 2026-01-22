@@ -68,8 +68,8 @@ export function MovieCard(
                 </div>
                 ` : ''}
                 <div class="movie-card__actions">
-                    <button class="movie-card__btn" data-action="watched" data-tmdb-id="${tmdbId}">
-                        <i class="fa-solid fa-eye fa-xl"></i> ${isWatched ? 'Unwatched' : 'Watched'}
+                    <button class="movie-card__btn ${isWatched ? 'watched' : ''}" data-action="watched" data-tmdb-id="${tmdbId}">
+                        <i class="fa-solid fa-eye fa-sm"></i> <span class="btn-text">Watched</span>
                     </button>
                     <button class="movie-card__btn movie-card__btn--circle" data-action="watchlist" data-tmdb-id="${tmdbId}">
                         ${isInWatchlist ? '-' : '+'}

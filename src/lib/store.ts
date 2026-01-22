@@ -37,7 +37,7 @@ class Store {
 
   // ========== WATCHLIST ACTIONS ==========
   
-  async toggleWatchlist(movie: TMDBMovie, shouldRender: boolean = true): Promise<void> {
+  async toggleWatchlist(movie: TMDBMovie, shouldRender: boolean = true): Promise<{ success: boolean; alreadyWatched?: boolean }> {
     try {
       const existing = await findMovieByTmdbId(movie.id);
       
@@ -45,16 +45,20 @@ class Store {
         // Remove from watchlist
         await deleteMovie(existing.id);
         this.watchlistMovies = this.watchlistMovies.filter(m => m.tmdb_id !== movie.id);
+      } else if (existing?.status === 'watched') {
+        // Already watched - return flag instead of doing nothing
+        return { success: false, alreadyWatched: true };
       } else if (!existing) {
         // Add to watchlist (only if not in database)
         const savedMovie = await addMovie(movie, 'watchlist');
         this.watchlistMovies.push(savedMovie);
       }
-      // If watched, do nothing
       
       if (shouldRender) {
         this.triggerRender();
       }
+      
+      return { success: true };
     } catch (error) {
       console.error("Failed to toggle watchlist:", error);
       throw error;
