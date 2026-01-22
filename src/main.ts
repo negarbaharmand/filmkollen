@@ -11,7 +11,6 @@ import browse from "./views/browse/index.ts";
 import about from "./views/about/index.ts";
 import { setupNavHighlighting } from "./lib/helpers.ts";
 import watchlist from "./views/watchlist/index.ts";  
-import watched from "./views/watched/index.ts";  
 
 
 
