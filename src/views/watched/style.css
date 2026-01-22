@@ -1,0 +1,22 @@
+.watched-page {
+  padding: 1rem;
+}
+
+.watched-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filters {
+  margin: 1rem 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filters button {
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}

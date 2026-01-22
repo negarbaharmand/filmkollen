@@ -1,4 +1,3 @@
-
 // Raw API response types (snake_case from TMDB API)
 export type TMDBListResponse<T> = {
     page: number;
@@ -60,10 +59,17 @@ export interface ExpressMovie {
 }
 
 // type for response when we fetch watchlist
+export interface WatchlistResponse {
+    movies: Movie[];
+    totalCount: number;
+}
+
+// type for response when we fetch movies (alias for consistency)
 export interface ExpressMovieResponse {
     movies: Movie[];
     totalCount: number;
 }
+
 // type for updating a movie in the database
 export interface UpdateMovieRequest {
     status?: 'watchlist' | 'watched';
