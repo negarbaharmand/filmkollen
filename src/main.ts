@@ -1,5 +1,5 @@
 import "./style.css";
-import { setRenderCallback } from "./lib/store.ts";
+import { setRenderCallback, loadInitialState } from "./lib/store.ts";
 import { watched } from "./views/watched/index.ts";
 
 // static HTML
@@ -58,7 +58,11 @@ const renderApp = () => {
 
 //initialise app rendering
 //if the app change, it rerenders the app
-renderApp();
+(async () => {
+  // Load watchlist and watched state from database before first render
+  await loadInitialState();
+  renderApp();
+})();
 
 window.addEventListener("popstate", () => {
   renderApp();
