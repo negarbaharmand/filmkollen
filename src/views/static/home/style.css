@@ -12,6 +12,9 @@ main {
 .browse__section {
     max-width: 1200px;
     margin: 0 auto;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .browse__section--top {
@@ -54,9 +57,9 @@ main {
     100% { transform: translateX(0); opacity: 0.5; }
 }
 
-.browse__search {
+ .browse__search {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 0.25rem;
 }
 
@@ -70,18 +73,11 @@ main {
     padding-right: 2.75rem; /* space for the icon */
 }
 
-.search-field__icon {
+ .search-field__icon {
     position: absolute;
     right: 1rem;
     color: var(--color-primary-light);
     pointer-events: none; /* allow clicks to focus input */
-}
-
-@media (max-width: 700px) {
-    .browse__search {
-        width: 100%;
-        justify-content: flex-start;
-    }
 }
 
 #search-root {
@@ -104,12 +100,13 @@ main {
 .movie-flex {
     display: flex;
     flex-direction: row;
-    overflow-x: scroll;
+    overflow-x: auto;
     width: 100%;
     scrollbar-width: none;
-    padding: 3rem;
-    gap: 4rem;
+    padding: 1rem 0.75rem;
+    gap: 1.5rem;
     -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
 }
 
 .movie-flex::-webkit-scrollbar {
@@ -117,13 +114,17 @@ main {
 }
 
 .movie-card {
-    position:relative;
+    position: relative;
     display: flex;
     flex-direction: row;
+    min-width: 0;
+    flex-shrink: 0;
 }
 
 #top5 .movie-card {
-    padding-left: 1rem;
+    padding-left: 0.5rem;
+    min-width: 0;
+    flex-shrink: 0;
 }
 
 #rest .movie-card__place {
@@ -133,12 +134,14 @@ main {
 #top5 .movie-card .movie-card__place {
     position: absolute;
     top: 0;
-    left: -20px;
-    font-size: 5rem;
+    left: -10px;
+    font-size: 2.5rem;
     color: transparent; /* make inside transparent */
-    -webkit-text-stroke: 2px white; /* outline color and width */
+    -webkit-text-stroke: 1.5px white; /* outline color and width */
     margin: 0;
-    font-family: "Abel", Arial
+    font-family: "Abel", Arial;
+    line-height: 1;
+    white-space: nowrap;
 }
 
 .movie-card__details {
@@ -270,8 +273,9 @@ main {
 }
 
 .movie-card__poster img {
-    height: 20rem;
+    height: 14rem;
     object-fit: contain;
+    max-width: 100%;
 }
 
 .movie-card__added-date {
@@ -398,92 +402,47 @@ main {
     cursor: pointer;
 }
 
-@media (min-width: 600px) {
-    .movie-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 800px) {
-    .movie-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-
-@media (min-width: 1000px) {
-    .movie-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-
+/* Shared large-screen breakpoint for this view */
 @media (min-width: 1200px) {
+    main {
+        padding: 1.5rem;
+    }
+
+    .browse {
+        gap: 3rem;
+    }
+
+    .browse__section--top {
+        padding: 2rem 1.75rem 1.5rem;
+        border-radius: 1.25rem;
+    }
+
+    .browse__search {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .movie-flex {
+        padding: 3rem;
+        gap: 4rem;
+    }
+
+    #top5 .movie-card {
+        padding-left: 1rem;
+    }
+
+    #top5 .movie-card .movie-card__place {
+        font-size: 5rem;
+        left: -20px;
+        -webkit-text-stroke: 2px white;
+    }
+
+    .movie-card__poster img {
+        height: 20rem;
+    }
+
     .movie-grid {
         grid-template-columns: repeat(5, 1fr);
     }
 }
-
-@media (max-width: 900px) {
-    .browse__section--top {
-        padding: 1.25rem 1rem 1rem;
-        border-radius: 1rem;
-    }
-
-    .movie-flex {
-        padding: 2rem 1.25rem 1.5rem;
-        gap: 2rem;
-    }
-
-    .browse__hint {
-        font-size: 0.7rem;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 600px) {
-    main {
-        padding: 0.75rem 0.5rem;
-    }
-
-    .browse {
-        gap: 2rem;
-    }
-
-    .browse__section {
-        padding-inline: 0.25rem;
-    }
-
-    .browse__section--top {
-        padding: 1rem 0.75rem 0.75rem;
-    }
-
-    #movie-search {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .movie-flex {
-        padding: 1.5rem 0.75rem 1.25rem;
-        gap: 1.5rem;
-    }
-
-    #top5 .movie-card .movie-card__place {
-        font-size: 3.2rem;
-        left: -14px;
-    }
-
-    .movie-card__poster img {
-        height: 14rem;
-    }
-
-    .movie-card__details {
-        height: auto;
-    }
-
-    .movie-modal {
-        padding: 1.1rem;
-    }
-}
-
 

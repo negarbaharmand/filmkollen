@@ -30,7 +30,8 @@
 }
 
 
-@media (min-width: 600px) {
+/* Shared large-screen breakpoint for this view */
+@media (min-width: 1200px) {
     .select-wrapper select {
         margin: 1rem;
         padding: 1rem;
