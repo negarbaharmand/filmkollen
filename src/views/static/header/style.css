@@ -1,6 +1,6 @@
 /* ========================================
    HEADER - CSS-ONLY HAMBURGER MENU
-   Shared breakpoint: min-width: 1200px
+   Shared breakpoint: min-width: 768px for tablet/desktop
    Mobile first
    ======================================== */
 
@@ -146,28 +146,17 @@ nav ul li a:hover {
   padding: 0.5rem 0;
 }
 
-/* DESKTOP LAYOUT (min-width: 1200px) */
+/* ========================================
+   TABLET AND DESKTOP LAYOUT (min-width: 768px)
+   Use 900px instead if you prefer
+   ======================================== */
 
-@media (min-width: 1200px) {
-  header {
-    padding: var(--spacing-md);
-    gap: 2rem;
-  }
-
+@media (min-width: 768px) {
   .logo-link {
     flex: 0 0 auto;
   }
 
-  .logo {
-    font-size: 2.4rem;
-    letter-spacing: 0.14em;
-  }
-
-  .logo::after {
-    width: 70%;
-  }
-
-  /* Desktop: inline navigation, no dropdown */
+  /* Tablet/Desktop: inline navigation, no dropdown */
   nav {
     position: static;
     max-height: none;
@@ -199,8 +188,28 @@ nav ul li a:hover {
     color: var(--color-primary);
   }
 
-  /* Hide hamburger on desktop */
+  /* Hide hamburger on tablet and desktop */
   .menu-icon {
     display: none;
+  }
+}
+
+/* ========================================
+   LARGE DESKTOP ENHANCEMENTS (min-width: 1200px)
+   ======================================== */
+
+@media (min-width: 1200px) {
+  header {
+    padding: var(--spacing-md);
+    gap: 2rem;
+  }
+
+  .logo {
+    font-size: 2.4rem;
+    letter-spacing: 0.14em;
+  }
+
+  .logo::after {
+    width: 70%;
   }
 }
