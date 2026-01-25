@@ -144,7 +144,7 @@ main {
     white-space: nowrap;
 }
 
-
+/* Default details height for carousel (top 5) */
 .movie-card__details {
     display: flex;
     height: 20rem;
@@ -187,8 +187,12 @@ main {
     transform: translateY(0);
 }
 
+/* Grid gets 24rem on mobile and tablet */
+.movie-grid .movie-card__details {
+    height: 24rem;
+}
 
- .movie-card__rating {
+.movie-card__rating {
     text-align: end;
     margin: 0.3rem;
 }
@@ -235,6 +239,7 @@ main {
     align-items:end;
     margin-top: auto;
     gap: 0.5rem
+    padding
 }
 
 .movie-card__actions {
@@ -273,22 +278,14 @@ main {
     background-color: rgba(255, 255, 255, 0.06);
 }
 
-.movie-card__poster img {
-    height: 20rem;
-    object-fit: contain;
-    max-width: 100%;
-}
-
 .movie-card__added-date {
     margin: 0;
 }
 
-
-
-/* Mobile-first: Default 2 columns */
+/* Mobile-first: Single column with larger posters */
 .movie-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     width: 100%;
     padding: 1rem;
     row-gap: 2rem;
@@ -297,11 +294,20 @@ main {
     gap: 1rem;
 }
 
+.movie-card__poster img {
+    height: 28rem; /* Even larger posters on mobile for single column */
+    object-fit: contain;
+    max-width: 100%;
+}
 
-/* Tablet: 3 columns at 768px */
+/* Tablet: 2 columns at 768px with larger posters */
 @media (min-width: 768px) {
     .movie-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .movie-card__poster img {
+        height: 24rem; /* Larger posters for 2 columns to fill space */
     }
 }
 
@@ -309,6 +315,26 @@ main {
 @media (min-width: 992px) {
     .movie-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .movie-card__poster img {
+        height: 20rem; /* Normal size for 4 columns */
+    }
+
+    /* Grid goes back to 20rem on desktop */
+    .movie-grid .movie-card__details {
+        height: 20rem;
+    }
+    /* Smaller buttons on desktop */
+    .movie-card__btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .movie-card__btn--circle {
+        height: 1.5rem;
+        width: 1.5rem;
+        font-size: 1.1rem;
     }
 }
 
