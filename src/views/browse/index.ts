@@ -5,7 +5,8 @@ import { renderSearch } from "../../components/ search";
 import { MovieCard } from "../../components/movieCard";
 import { attachDescriptionState } from "../../lib/helpers";
 import { openMovieDetailsModal } from "../../components/movieDetailsModal";
-import { toggleWatchlist, toggleWatched } from "../../lib/store"; 
+import { toggleWatchlist, toggleWatched } from "../../lib/store";
+import { showConfirmationModal } from "../../components/confirmationModal"; 
 
 
 //commented code is used to quickly add items to watched list for easier testing, to be deleted later on
@@ -43,7 +44,16 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
         button.textContent = isCurrentlyInWatchlist ? '+' : '-';
         button.disabled = true;
         
-        await toggleWatchlist(movie, false); // Don't trigger render
+        const result = await toggleWatchlist(movie, false); // Don't trigger render
+        
+        if (result.alreadyWatched) {
+          // Revert button since movie is already watched
+          button.textContent = originalText;
+          await showConfirmationModal(
+            `You've already watched "${movie.title}". Remove it from watched movies to add it to your watchlist.`,
+            "Already Watched"
+          );
+        }
         
         button.disabled = false;
       } catch (error) {
@@ -63,14 +73,11 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
       event.stopPropagation();
       
       const button = event.currentTarget as HTMLButtonElement;
-      const originalHTML = button.innerHTML;
+      const hadWatchedClass = button.classList.contains('watched');
       
       try {
-        // Optimistically update the button
-        const isCurrentlyWatched = button.innerHTML.includes('Unwatched');
-        button.innerHTML = isCurrentlyWatched 
-          ? '<i class="fa-solid fa-eye fa-xl"></i> Watched'
-          : '<i class="fa-solid fa-eye fa-xl"></i> Unwatched';
+        // Toggle watched class
+        button.classList.toggle('watched');
         button.disabled = true;
         
         await toggleWatched(movie, false); // Don't trigger render
@@ -79,7 +86,11 @@ function attachCardInteractions(root: HTMLElement, movies: TMDBMovie[]): void {
       } catch (error) {
         console.error("Failed to toggle watched:", error);
         // Revert on error
-        button.innerHTML = originalHTML;
+        if (hadWatchedClass) {
+          button.classList.add('watched');
+        } else {
+          button.classList.remove('watched');
+        }
         button.disabled = false;
       }
     });

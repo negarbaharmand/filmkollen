@@ -1,6 +1,8 @@
 import { getPosterUrl } from "../services/tmdbApi";
 import type { TMDBMovie } from "../types/movie";
 import { toggleWatchlist, toggleWatched } from "../lib/store";
+import store from "../lib/store";
+import { showConfirmationModal } from "./confirmationModal";
 
 let modalRoot: HTMLDivElement | null = null;
 
@@ -92,10 +94,15 @@ export function openMovieDetailsModal(movie: TMDBMovie): void {
   metaEl.textContent = `${movie.releaseYear} ${movie.adult ? "18+" : ""}`;
   overviewEl.textContent = movie.overview ?? "No description available.";
 
-  // Reset button labels each time modal opens
-  watchlistBtn.textContent = "Add to Watchlist";
-  watchedBtn.textContent = "Mark as Watched";
-  watchlistBtn.disabled = false;
+  // Check current state and set button labels accordingly
+  const isInWatchlist = store.isInWatchlist(movie.id);
+  const isWatched = store.isWatched(movie.id);
+
+  watchlistBtn.textContent = isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist";
+  watchedBtn.textContent = isWatched ? "Remove from Watched" : "Mark as Watched";
+  
+  // Disable watchlist button if movie is already watched
+  watchlistBtn.disabled = isWatched;
   watchedBtn.disabled = false;
 
   // Clean previous listeners by cloning
@@ -107,22 +114,53 @@ export function openMovieDetailsModal(movie: TMDBMovie): void {
 
   newWatchlistBtn.addEventListener("click", async () => {
     newWatchlistBtn.disabled = true;
+    const wasInWatchlist = store.isInWatchlist(movie.id);
+    
     try {
-      await toggleWatchlist(movie);
-      newWatchlistBtn.textContent = "Added to Watchlist";
+      const result = await toggleWatchlist(movie, false); // Don't trigger app re-render
+      
+      if (result.alreadyWatched) {
+        // Movie is already watched, show confirmation modal
+        await showConfirmationModal(
+          `You've already watched "${movie.title}". Remove it from watched movies to add it to your watchlist.`,
+          "Already Watched"
+        );
+        newWatchlistBtn.disabled = true; // Keep disabled since it's watched
+      } else {
+        // Toggle successful, update button text
+        const isNowInWatchlist = store.isInWatchlist(movie.id);
+        newWatchlistBtn.textContent = isNowInWatchlist ? "Remove from Watchlist" : "Add to Watchlist";
+        newWatchlistBtn.disabled = store.isWatched(movie.id); // Disable if watched
+      }
     } catch (error) {
-      console.error("Failed to add to watchlist", error);
+      console.error("Failed to toggle watchlist", error);
       newWatchlistBtn.disabled = false;
     }
   });
 
   newWatchedBtn.addEventListener("click", async () => {
     newWatchedBtn.disabled = true;
+    const wasWatched = store.isWatched(movie.id);
+    const wasInWatchlist = store.isInWatchlist(movie.id);
+    
     try {
-      await toggleWatched(movie);
-      newWatchedBtn.textContent = "Marked as Watched";
+      await toggleWatched(movie, false); // Don't trigger app re-render
+      
+      // Update watched button text based on new state
+      const isNowWatched = store.isWatched(movie.id);
+      newWatchedBtn.textContent = isNowWatched ? "Remove from Watched" : "Mark as Watched";
+      newWatchedBtn.disabled = false;
+      
+      // If movie was moved from watchlist to watched, update watchlist button
+      if (wasInWatchlist && isNowWatched) {
+        newWatchlistBtn.textContent = "Add to Watchlist";
+        newWatchlistBtn.disabled = true; // Disable since it's now watched
+      } else if (!isNowWatched && wasWatched) {
+        // Movie was removed from watched, enable watchlist button
+        newWatchlistBtn.disabled = false;
+      }
     } catch (error) {
-      console.error("Failed to mark as watched", error);
+      console.error("Failed to toggle watched", error);
       newWatchedBtn.disabled = false;
     }
   });

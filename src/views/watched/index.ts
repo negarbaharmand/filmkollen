@@ -207,7 +207,10 @@ function renderMovies(root: HTMLElement, filter: string = "all", sortBy: string 
 function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) {
     // Toggle favorite
     const favBtn = card.querySelector<HTMLButtonElement>(".favorite-btn");
-    favBtn?.addEventListener("click", async () => {
+    favBtn?.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
         movie.is_favorite = !movie.is_favorite;
         if (favBtn && favBtn instanceof HTMLButtonElement) {
             favBtn.textContent = movie.is_favorite ? '❤️' : '🤍';
@@ -215,7 +218,7 @@ function attachMovieActions(card: HTMLElement, movie: Movie, root: HTMLElement) 
         }
         try {
             await updateMovie(movie.id, { is_favorite: movie.is_favorite });
-            renderMovies(root, filter, sortBy);
+            // Don't re-render to keep modal open
         } catch (err) {
             console.error("Failed to update favorite:", err);
             // Revert on error

@@ -1,6 +1,6 @@
 // Global state: watchlist, watched
 import type { TMDBMovie, Movie } from "../types/movie";
-import { addMovie, updateMovie, deleteMovie, findMovieByTmdbId } from "../services/movieApi";
+import { addMovie, updateMovie, deleteMovie, findMovieByTmdbId, getMoviesByStatus } from "../services/movieApi";
 
 class Store {
   renderCallback: () => void;
@@ -35,9 +35,25 @@ class Store {
     return this.watchedMovies.some(movie => movie.tmdb_id === tmdbId);
   }
 
+  // ========== INITIALIZATION ==========
+  
+  async loadInitialState(): Promise<void> {
+    try {
+      const [watchlistData, watchedData] = await Promise.all([
+        getMoviesByStatus('watchlist'),
+        getMoviesByStatus('watched')
+      ]);
+      
+      this.watchlistMovies = watchlistData.movies;
+      this.watchedMovies = watchedData.movies;
+    } catch (error) {
+      console.error("Failed to load initial state:", error);
+    }
+  }
+
   // ========== WATCHLIST ACTIONS ==========
   
-  async toggleWatchlist(movie: TMDBMovie, shouldRender: boolean = true): Promise<void> {
+  async toggleWatchlist(movie: TMDBMovie, shouldRender: boolean = true): Promise<{ success: boolean; alreadyWatched?: boolean }> {
     try {
       const existing = await findMovieByTmdbId(movie.id);
       
@@ -45,16 +61,20 @@ class Store {
         // Remove from watchlist
         await deleteMovie(existing.id);
         this.watchlistMovies = this.watchlistMovies.filter(m => m.tmdb_id !== movie.id);
+      } else if (existing?.status === 'watched') {
+        // Already watched - return flag instead of doing nothing
+        return { success: false, alreadyWatched: true };
       } else if (!existing) {
         // Add to watchlist (only if not in database)
         const savedMovie = await addMovie(movie, 'watchlist');
         this.watchlistMovies.push(savedMovie);
       }
-      // If watched, do nothing
       
       if (shouldRender) {
         this.triggerRender();
       }
+      
+      return { success: true };
     } catch (error) {
       console.error("Failed to toggle watchlist:", error);
       throw error;
@@ -101,5 +121,6 @@ const store = new Store();
 export const setRenderCallback = store.setRenderCallback.bind(store);
 export const toggleWatchlist = store.toggleWatchlist.bind(store);
 export const toggleWatched = store.toggleWatched.bind(store);
+export const loadInitialState = store.loadInitialState.bind(store);
 
 export default store;
