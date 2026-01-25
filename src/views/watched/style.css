@@ -1,5 +1,5 @@
 .watched-page {
-  padding: 1rem;
+  padding: clamp(1rem, 3vw, 2rem); /* Fluid padding */
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -25,7 +25,7 @@
 
 .controls {
   display: flex;
-  gap: 1rem;
+  gap: clamp(0.5rem, 2vw, 1rem); /* Fluid gap */
   margin-bottom: 2rem;
   flex-wrap: wrap;
   flex-shrink: 0;
@@ -104,6 +104,7 @@
   margin: 1rem 0;
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .filters button {
@@ -111,32 +112,6 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
-}
-
-@media (max-width: 600px) {
-  .watched-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .controls {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .movie-card__actions {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-  }
-
-  .favorite-btn,
-  .rate-btn,
-  .remove-btn {
-    width: 2rem;
-    height: 2rem;
-  }
 }
 
 /* Rating Modal Styles */
@@ -258,6 +233,7 @@
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 1rem;
+  flex-wrap: wrap; /* Allow wrapping on very small screens */
 }
 
 .rating-modal__btn {
@@ -289,28 +265,6 @@
 .rating-modal__btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-@media (max-width: 600px) {
-  .rating-modal {
-    padding: 1.5rem;
-  }
-
-  .rating-modal__stars {
-    gap: 0.25rem;
-  }
-
-  .star-btn {
-    font-size: 2rem;
-  }
-
-  .rating-modal__actions {
-    flex-direction: column;
-  }
-
-  .rating-modal__btn {
-    width: 100%;
-  }
 }
 
 /* Confirmation Modal Styles */
@@ -387,6 +341,7 @@
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 0.5rem;
+  flex-wrap: wrap; /* Allow wrapping on very small screens */
 }
 
 .confirmation-modal__btn {
@@ -415,16 +370,46 @@
   border-color: #a01414;
 }
 
-@media (max-width: 600px) {
+/* TABLET BREAKPOINT (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .watched-page {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .watched-header {
+    margin-bottom: 1.75rem;
+  }
+  
+  .controls {
+    flex-wrap: wrap; /* Allow wrapping on tablets if needed */
+  }
+
+  .rating-modal,
   .confirmation-modal {
-    padding: 1.5rem;
+    max-width: 550px;
+  }
+}
+
+/*LARGE DESKTOP BREAKPOINT (1200px+) */
+@media (min-width: 1200px) {
+  .watched-page {
+    padding: 1.5rem 2rem;
   }
 
-  .confirmation-modal__actions {
-    flex-direction: column;
+  .watched-header {
+    margin-bottom: 2rem;
   }
 
-  .confirmation-modal__btn {
-    width: 100%;
+  .controls {
+    flex-wrap: nowrap;
+  }
+
+  .movie-card__actions {
+    justify-content: flex-end;
+  }
+
+  .rating-modal,
+  .confirmation-modal {
+    max-width: 600px;
   }
 }

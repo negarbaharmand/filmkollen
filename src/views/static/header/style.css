@@ -1,59 +1,84 @@
+/* ========================================
+   HEADER - CSS-ONLY HAMBURGER MENU
+   Shared breakpoint: min-width: 768px for tablet/desktop
+   Mobile first
+   ======================================== */
+
 header {
   background-color: var(--color-background2);
   color: var(--color-text-inverse);
-  padding: var(--spacing-md);
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
+  position: relative;
 }
 
 nav {
-  display: flex;
-  align-items: center;
+  /* Mobile: dropdown panel controlled by checkbox */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-background2);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  z-index: 100;
 }
 
 nav ul {
   display: flex;
+  flex-direction: column;
   list-style: none;
-  gap: var(--spacing-md);
-  margin: 0
+  gap: 0;
+  margin: 0;
+  padding: 0;
 }
 
 nav ul li {
-  display: inline-block;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav ul li:last-child {
+  border-bottom: none;
 }
 
 nav ul li a {
+  display: block;
   text-decoration: none;
   color: var(--color-text-inverse);
-
+  padding: 0.85rem 1.25rem;
+  transition: all 0.2s ease;
 }
 
 nav ul li a.active {
-    color: var(--color-primary);
-  }
-
-nav ul li a.active:hover {
   color: var(--color-primary);
 }
 
-
 nav ul li a:hover {
   color: var(--color-primary-light);
+  background: rgba(255, 59, 59, 0.1);
+  padding-left: 2rem;
 }
 
 .logo-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
+  flex: 1;
 }
 
 .logo {
   margin: 0;
   font-family: "Abel", Arial, sans-serif;
-  font-size: 2.4rem;
-  letter-spacing: 0.14em;
+  font-size: 1.8rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #ff3b3b;
   font-weight: 700;
@@ -68,12 +93,123 @@ nav ul li a:hover {
   position: absolute;
   left: 0;
   bottom: -0.25rem;
-  width: 70%;
+  width: 60%;
   height: 3px;
   border-radius: 999px;
   background: linear-gradient(90deg, #ff9f43, #ff3b3b);
 }
 
+/* ========================================
+   HAMBURGER MENU ELEMENTS (MOBILE DEFAULT)
+   ======================================== */
 
+/* Hide checkbox */
+#menu-toggle {
+  display: none;
+}
 
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 28px;
+  height: 22px;
+  cursor: pointer;
+  z-index: 101;
+}
 
+.menu-icon span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #ff3b3b; /* Red to match logo */
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Hamburger animation when menu is open */
+#menu-toggle:checked ~ .menu-icon span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+#menu-toggle:checked ~ .menu-icon span:nth-child(2) {
+  opacity: 0;
+}
+
+#menu-toggle:checked ~ .menu-icon span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Show navigation when checkbox is checked */
+#menu-toggle:checked ~ nav {
+  max-height: 500px;
+  padding: 0.5rem 0;
+}
+
+/* ========================================
+   TABLET AND DESKTOP LAYOUT (min-width: 768px)
+   Use 900px instead if you prefer
+   ======================================== */
+
+@media (min-width: 768px) {
+  .logo-link {
+    flex: 0 0 auto;
+  }
+
+  /* Tablet/Desktop: inline navigation, no dropdown */
+  nav {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    width: auto;
+    padding: 0;
+  }
+
+  nav ul {
+    flex-direction: row;
+    gap: var(--spacing-md);
+  }
+
+  nav ul li {
+    display: inline-block;
+    border-bottom: none;
+    width: auto;
+  }
+
+  nav ul li a {
+    padding: 0;
+  }
+
+  nav ul li a:hover,
+  nav ul li a.active {
+    background: transparent;
+    padding-left: 0;
+    color: var(--color-primary);
+  }
+
+  /* Hide hamburger on tablet and desktop */
+  .menu-icon {
+    display: none;
+  }
+}
+
+/* ========================================
+   LARGE DESKTOP ENHANCEMENTS (min-width: 1200px)
+   ======================================== */
+
+@media (min-width: 1200px) {
+  header {
+    padding: var(--spacing-md);
+    gap: 2rem;
+  }
+
+  .logo {
+    font-size: 2.4rem;
+    letter-spacing: 0.14em;
+  }
+
+  .logo::after {
+    width: 70%;
+  }
+}
