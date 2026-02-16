@@ -4,11 +4,12 @@
 
 Filmkollen is a movie tracking application built with TypeScript. Users can browse movies, manage their watchlist, and track watched movies with personal ratings and reviews. The app uses the TMDB API for movie data and an Express/SQLite backend for user data.
 
----
+![Overview of the app](./public/UI.png)
 
 ## ✨ Features
 
 ### Browse & Search (`/`)
+
 - Browse popular movies from TMDB
 - Real-time search with debouncing
 - Movie cards with poster, title, rating, release year, and description
@@ -16,12 +17,14 @@ Filmkollen is a movie tracking application built with TypeScript. Users can brow
 - Movie details modal
 
 ### Watchlist (`/watchlist`)
+
 - View all movies in your watchlist
 - Shows date added
 - Mark as watched or remove from list
 - Empty state handling
 
 ### Watched Movies (`/watched`)
+
 - View all watched movies with personal ratings (1-5 stars)
 - Filter by favorites, rating, or TMDB score
 - Sort by date watched or rating
@@ -42,12 +45,14 @@ Filmkollen is a movie tracking application built with TypeScript. Users can brow
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js and npm
 - TMDB API key ([Get one here](https://www.themoviedb.org/settings/api))
 
 ### Setup
 
 1. **Backend:**
+
 ```bash
 cd server
 npm install
@@ -56,6 +61,7 @@ npm run dev
 ```
 
 2. **Frontend:**
+
 ```bash
 npm install
 npm run dev
@@ -63,7 +69,8 @@ npm run dev
 ```
 
 3. **Environment Variables:**
-Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory:
+
 ```
 VITE_TMDB_API_KEY=your_api_key_here
 VITE_TMDB_BASE_URL=https://api.themoviedb.org/3
