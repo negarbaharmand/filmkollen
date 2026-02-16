@@ -27,10 +27,66 @@ main {
         0 0 0 1px rgba(255, 255, 255, 0.03);
     padding: 1.75rem 1.5rem 0.75rem;
     backdrop-filter: blur(10px);
+    overflow: visible;
+    position: relative;
+}
+
+/* Carousel navigation buttons */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-nav:hover,
+.carousel-nav:focus-visible {
+    background: rgba(202, 24, 24, 0.9);
+    border-color: rgba(202, 24, 24, 1);
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 6px 20px rgba(202, 24, 24, 0.4);
+    outline: none;
+}
+
+.carousel-nav:active {
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-nav--left {
+    left: 0.5rem;
+}
+
+.carousel-nav--right {
+    right: 0.5rem;
+}
+
+.carousel-nav.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-nav svg {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .browse__hint {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: flex-end;
     gap: 0.35rem;
@@ -57,7 +113,7 @@ main {
     100% { transform: translateX(0); opacity: 0.5; }
 }
 
- .browse__search {
+.browse__search {
     display: flex;
     justify-content: flex-start;
     margin-top: 0.25rem;
@@ -70,14 +126,14 @@ main {
 }
 
 .search-field input#movie-search {
-    padding-right: 2.75rem; /* space for the icon */
+    padding-right: 2.75rem;
 }
 
- .search-field__icon {
+.search-field__icon {
     position: absolute;
     right: 1rem;
     color: var(--color-primary-light);
-    pointer-events: none; /* allow clicks to focus input */
+    pointer-events: none;
 }
 
 #search-root {
@@ -101,12 +157,16 @@ main {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     scrollbar-width: none;
     padding: 0.75rem 0.75rem 0.5rem;
     gap: 1.5rem;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
+    scroll-behavior: smooth;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
 }
 
 .movie-flex::-webkit-scrollbar {
@@ -123,8 +183,6 @@ main {
 
 #top5 .movie-card {
     padding-left: 0.5rem;
-    min-width: 0;
-    flex-shrink: 0;
 }
 
 #rest .movie-card__place {
@@ -136,15 +194,15 @@ main {
     top: 0;
     left: -10px;
     font-size: 2.5rem;
-    color: transparent; /* make inside transparent */
-    -webkit-text-stroke: 1.5px white; /* outline color and width */
+    color: transparent;
+    -webkit-text-stroke: 1.5px white;
     margin: 0;
     font-family: "Abel", Arial;
     line-height: 1;
     white-space: nowrap;
 }
 
-/* Default details height for carousel (top 5) */
+/* Default details for carousel (top 5) */
 .movie-card__details {
     display: flex;
     height: 20rem;
@@ -154,23 +212,21 @@ main {
     overflow: hidden;
     flex-direction: column;
     justify-content: center;
-
     opacity: 0;
-
     transition:
-      width 0.4s ease,
-      opacity 0.3s ease,
-      transform 0.3s ease;
+        width 0.4s ease,
+        opacity 0.3s ease,
+        transform 0.3s ease;
 }
 
 /* Top5 carousel: side-sliding details */
 #top5 .movie-card__details {
     transition:
-      width 0.5s ease,
-      max-width 0.5s ease,
-      opacity 0.4s ease,
-      transform 0.5s ease,
-      padding 0.5s ease;
+        width 0.5s ease,
+        max-width 0.5s ease,
+        opacity 0.4s ease,
+        transform 0.5s ease,
+        padding 0.5s ease;
 }
 
 #top5 .movie-card__details > * {
@@ -191,7 +247,19 @@ main {
     transition-delay: 0.2s;
 }
 
-/* Grid cards (More section, Watchlist, Watched): overlay on top of the card */
+/* Last card: make details slide to the left instead of right */
+#top5 .movie-card:last-child {
+    flex-direction: row-reverse;
+    padding-left: 0;
+    padding-right: 0.5rem;
+}
+
+#top5 .movie-card:last-child .movie-card__place {
+    left: auto;
+    right: -10px;
+}
+
+/* Grid cards: overlay on top of the card */
 #rest .movie-card__details,
 .watchlist-page .movie-card__details,
 .watched-page .movie-card__details {
@@ -250,36 +318,36 @@ main {
 }
 
 .movie-card__overview-wrapper {
-  height: 8rem;
-  position: relative;
-  overflow: hidden;
+    height: 8rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .movie-card__overview-wrapper::after {
-  content: "";
-  position: absolute; 
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 5rem;
-  pointer-events: none;
-  background: linear-gradient(
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 1)
-  );
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5rem;
+    pointer-events: none;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 1)
+    );
 }
 
 .movie-card__overview {
-  font-size: 0.9em;
-  line-height: 1.2rem;
-  padding-right: 0.5rem;
-  overflow: hidden;
+    font-size: 0.9em;
+    line-height: 1.2rem;
+    padding-right: 0.5rem;
+    overflow: hidden;
 }
 
 .movie-card__footer {
     display: flex;
     justify-content: space-between;
-    align-items:end;
+    align-items: end;
     margin-top: auto;
     gap: 0.5rem;
 }
@@ -329,23 +397,20 @@ main {
     color: #ef4444;
 }
 
-.movie-card__btn[data-action="watched"].watched .btn-text::before {
-    content: 'Watched';
-}
-
-.movie-card__btn[data-action="watched"].watched:hover .btn-text::before {
-    content: 'Remove';
-}
-
 .movie-card__btn[data-action="watched"].watched .btn-text {
     visibility: hidden;
     position: relative;
 }
 
 .movie-card__btn[data-action="watched"].watched .btn-text::before {
+    content: 'Watched';
     visibility: visible;
     position: absolute;
     left: 0;
+}
+
+.movie-card__btn[data-action="watched"].watched:hover .btn-text::before {
+    content: 'Remove';
 }
 
 .movie-card__btn--circle {
@@ -380,47 +445,9 @@ main {
 }
 
 .movie-card__poster img {
-    height: 28rem; /* Even larger posters on mobile for single column */
+    height: 28rem;
     object-fit: contain;
     max-width: 100%;
-}
-
-/* Tablet: 2 columns at 768px with larger posters */
-@media (min-width: 768px) {
-    .movie-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .movie-card__poster img {
-        height: 24rem; /* Larger posters for 2 columns to fill space */
-    }
-}
-
-/* Desktop: 4 columns at 992px */
-@media (min-width: 992px) {
-    .movie-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .movie-card__poster img {
-        height: 20rem; /* Normal size for 4 columns */
-    }
-
-    /* Grid goes back to 20rem on desktop */
-    .movie-grid .movie-card__details {
-        height: 20rem;
-    }
-    /* Smaller buttons on desktop */
-    .movie-card__btn {
-        padding: 0.2rem 0.5rem;
-        font-size: 0.7rem;
-    }
-
-    .movie-card__btn--circle {
-        height: 1.5rem;
-        width: 1.5rem;
-        font-size: 1.1rem;
-    }
 }
 
 .movie-grid.fade-in {
@@ -428,16 +455,11 @@ main {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* ===== Movie Details Modal ===== */
-
 .movie-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -530,7 +552,53 @@ main {
     cursor: pointer;
 }
 
-/* Shared large-screen breakpoint for this view */
+/* ===== MEDIA QUERIES ===== */
+
+/* Show swipe hint only on mobile */
+@media (max-width: 767px) {
+    .browse__hint {
+        display: flex;
+    }
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 768px) {
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .movie-card__poster img {
+        height: 24rem;
+    }
+}
+
+/* Desktop: 4 columns */
+@media (min-width: 992px) {
+    .movie-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .movie-card__poster img {
+        height: 20rem;
+    }
+
+    .movie-grid .movie-card__details {
+        height: 20rem;
+    }
+    
+    .movie-card__btn {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .movie-card__btn--circle {
+        height: 1.5rem;
+        width: 1.5rem;
+        font-size: 1.1rem;
+    }
+}
+
+/* Large desktop: 5 columns */
 @media (min-width: 1200px) {
     main {
         padding: 1.5rem;
@@ -550,13 +618,43 @@ main {
         justify-content: flex-start;
     }
 
+    .movie-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Show carousel navigation on screens that need scrolling */
+@media (max-width: 1499px) {
+    .carousel-nav {
+        display: flex;
+    }
+}
+
+/* Extra large screens: show all 5 movies in one row */
+@media (min-width: 1500px) {
+    .browse__section {
+        max-width: 1600px;
+    }
+
     .movie-flex {
-        padding: 1.5rem 3rem 1rem;
-        gap: 4rem;
+        padding: 1.5rem 2rem 1rem;
+        gap: 1.5rem;
+        overflow-x: visible;
+        justify-content: center;
     }
 
     #top5 .movie-card {
         padding-left: 1rem;
+    }
+    
+    #top5 .movie-card:last-child {
+        padding-left: 0;
+        padding-right: 1rem;
+    }
+    
+    .browse__hint,
+    .carousel-nav {
+        display: none;
     }
 
     #top5 .movie-card .movie-card__place {
@@ -564,14 +662,9 @@ main {
         left: -20px;
         -webkit-text-stroke: 2px white;
     }
-
-    .movie-card__poster img {
-        height: 20rem;
-    }
-
-    /* Large desktop: 5 columns at 1200px */
-    .movie-grid {
-        grid-template-columns: repeat(5, 1fr);
+    
+    #top5 .movie-card:last-child .movie-card__place {
+        left: auto;
+        right: -20px;
     }
 }
-
