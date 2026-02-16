@@ -129,6 +129,16 @@ export default function browse(): HTMLElement {
                 <span class="browse__hint-text">Swipe to see more</span>
                 <span class="browse__hint-arrow">⟶</span>
             </div>
+            <button class="carousel-nav carousel-nav--left" aria-label="Previous movies">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <button class="carousel-nav carousel-nav--right" aria-label="Next movies">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
             <div id="top5" class="movie-flex" aria-live="polite"></div>
         </section>
 
@@ -146,8 +156,40 @@ export default function browse(): HTMLElement {
     const topRoot = root.querySelector<HTMLElement>("#top5")!;
     const restRoot = root.querySelector<HTMLElement>("#rest")!;
     const searchRoot = root.querySelector<HTMLElement>("#search-root")!;
+    const navLeft = root.querySelector<HTMLButtonElement>(".carousel-nav--left")!;
+    const navRight = root.querySelector<HTMLButtonElement>(".carousel-nav--right")!;
 
     let popularCache: TMDBMovie[] = [];
+
+    // Setup carousel navigation
+    const updateNavButtons = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = topRoot;
+        const isAtStart = scrollLeft <= 0;
+        const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10;
+        
+        navLeft.classList.toggle("visible", !isAtStart);
+        navRight.classList.toggle("visible", !isAtEnd);
+    };
+
+    navLeft.addEventListener("click", () => {
+        topRoot.scrollBy({ left: -300, behavior: "smooth" });
+    });
+
+    navRight.addEventListener("click", () => {
+        topRoot.scrollBy({ left: 300, behavior: "smooth" });
+    });
+
+    topRoot.addEventListener("scroll", updateNavButtons);
+    window.addEventListener("resize", updateNavButtons);
+    
+    // Update nav buttons after movies are loaded
+    const observer = new MutationObserver(() => {
+        setTimeout(updateNavButtons, 100);
+    });
+    observer.observe(topRoot, { childList: true, subtree: true });
+    
+    // Initial check
+    setTimeout(updateNavButtons, 500);
 
     const loadPopular = async () => {
         topRoot.innerHTML = "Loading...";
